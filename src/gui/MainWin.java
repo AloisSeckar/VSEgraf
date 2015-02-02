@@ -3,12 +3,13 @@
 // @author Alois Seckar [ ellrohir@seznam.cz ]
 // @version 0.1
 //
-// Last modified: 2015-02-02 0028 GMT by Alois Seckar
+// Last modified: 2015-02-02 2336 GMT by Alois Seckar
 
 package gui;
 
 import db.DBHandler;
 import db.KBEntry;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,6 +27,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -34,6 +37,8 @@ import javax.swing.JTextField;
 public class MainWin extends javax.swing.JFrame {
     
     private static final MainWin instance = new MainWin();
+    
+    private KBEntry currentKBEntry;
 
     /**
      * Creates new form MainWin
@@ -75,6 +80,7 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsSaveButton = new javax.swing.JButton();
         kbContentsNewButton = new javax.swing.JButton();
         kbContentsDeleteButton = new javax.swing.JButton();
+        kbContentsUnsavedMarker = new javax.swing.JLabel();
         sidePanel = new javax.swing.JPanel();
         palettePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -166,7 +172,6 @@ public class MainWin extends javax.swing.JFrame {
 
         kbContentsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         kbContentsScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        kbContentsScrollPane.setPreferredSize(null);
 
         kbContentsTextArea.setEditable(false);
         kbContentsTextArea.setColumns(20);
@@ -211,6 +216,9 @@ public class MainWin extends javax.swing.JFrame {
             }
         });
 
+        kbContentsUnsavedMarker.setForeground(new java.awt.Color(255, 0, 0));
+        kbContentsUnsavedMarker.setText("Unsaved");
+
         javax.swing.GroupLayout kbPanelLayout = new javax.swing.GroupLayout(kbPanel);
         kbPanel.setLayout(kbPanelLayout);
         kbPanelLayout.setHorizontalGroup(
@@ -223,26 +231,26 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbIndexScrollPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(kbContentsScrollPane)
                     .addGroup(kbPanelLayout.createSequentialGroup()
-                        .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(kbPanelLayout.createSequentialGroup()
-                                .addComponent(kbContentsTitle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsEditTitleButton)
-                                .addGap(116, 116, 116)
-                                .addComponent(kbContentsCategoryLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsCategory))
-                            .addGroup(kbPanelLayout.createSequentialGroup()
-                                .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsDeleteButton)))
-                        .addGap(0, 107, Short.MAX_VALUE)))
+                        .addComponent(kbContentsTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbContentsEditTitleButton)
+                        .addGap(116, 116, 116)
+                        .addComponent(kbContentsCategoryLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbContentsCategory)
+                        .addGap(0, 125, Short.MAX_VALUE))
+                    .addGroup(kbPanelLayout.createSequentialGroup()
+                        .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbContentsDeleteButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(kbContentsUnsavedMarker)))
                 .addContainerGap())
         );
         kbPanelLayout.setVerticalGroup(
@@ -256,7 +264,7 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbContentsCategory))
                 .addGap(4, 4, 4)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(kbContentsScrollPane)
                     .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -264,7 +272,8 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbContentsEditButton)
                     .addComponent(kbContentsSaveButton)
                     .addComponent(kbContentsNewButton)
-                    .addComponent(kbContentsDeleteButton))
+                    .addComponent(kbContentsDeleteButton)
+                    .addComponent(kbContentsUnsavedMarker))
                 .addContainerGap())
         );
 
@@ -535,13 +544,19 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbIndexRefreshButtonActionPerformed
 
     private void kbContentsEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditButtonActionPerformed
-        kbContentsTextArea.setEditable(!kbContentsTextArea.isEditable());
-        kbContentsSaveButton.setEnabled(!kbContentsSaveButton.isEnabled());
-        kbContentsEditTitleButton.setEnabled(!kbContentsEditTitleButton.isEnabled());
+        allowKBEdit(!kbContentsSaveButton.isEnabled());
     }//GEN-LAST:event_kbContentsEditButtonActionPerformed
 
     private void kbContentsSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsSaveButtonActionPerformed
-        notImplemeted();
+        // get edited values
+        currentKBEntry.setEntryTitle(kbContentsTitle.getText());
+        currentKBEntry.setEntryBody(kbContentsTextArea.getText());
+        // update DB entry
+        DBHandler.updateObject(currentKBEntry);
+        // update items list as entry title might have changed
+        kbIndexRefreshButtonActionPerformed(null);
+        // clear unsaved changes gui markers
+        markUnsavedChanges(false, false);
     }//GEN-LAST:event_kbContentsSaveButtonActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -591,7 +606,7 @@ public class MainWin extends javax.swing.JFrame {
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         JOptionPane.showMessageDialog(instance, "VSEGraf\n"
-                + "Simple java graph designing tool for educational purposes\n\n"
+                + "Simple Java graph designing tool for educational purposes\n\n"
                 + "Authors: Alois Seckar, Tomas Skalicky\n\n"
                 + "© 2015", 
                 "VSEGraf", JOptionPane.INFORMATION_MESSAGE);
@@ -621,7 +636,7 @@ public class MainWin extends javax.swing.JFrame {
     private void kbContentsEditTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditTitleButtonActionPerformed
         // inspired by:
         // http://stackoverflow.com/a/790224
-        JTextField entryTitle = new JTextField(kbContentsTitle.getText());
+        JTextField entryTitle = new JTextField(currentKBEntry.getEntryTitle());
         final JComponent[] inputs = new JComponent[] {
             new JLabel("Set title:"),
             entryTitle
@@ -629,15 +644,50 @@ public class MainWin extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, inputs, "VSEGraf - editing", 
                 JOptionPane.PLAIN_MESSAGE);
         //
-        kbContentsTitle.setText(entryTitle.getText());
+        if (!currentKBEntry.getEntryTitle().equals(entryTitle.getText())) {
+            currentKBEntry.setEntryTitle(entryTitle.getText());
+            kbContentsTitle.setText(entryTitle.getText());
+            // mark unsaved changes
+            markUnsavedChanges(true, true);
+        }
     }//GEN-LAST:event_kbContentsEditTitleButtonActionPerformed
 
     private void kbContentsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsNewButtonActionPerformed
-        notImplemeted();
+        // create plain new entry and save it to db
+        currentKBEntry = new KBEntry("New entry", "General", "Start typing contents...");
+        DBHandler.saveObject(currentKBEntry);
+        // update gui elements with new values
+        kbContentsTitle.setText(currentKBEntry.getEntryTitle());
+        kbContentsCategory.setText(currentKBEntry.getEntryCat());
+        kbContentsTextArea.setText(currentKBEntry.getEntryBody());
+        // clear unsaved changes gui markers (initial entry was saved)
+        markUnsavedChanges(false, false);
+        // update items list
+        kbIndexRefreshButtonActionPerformed(null);
+        kbList.setSelectedIndex(kbList.getModel().getSize()-1);
+        // allow editing if not enabled yet
+        if (!kbContentsSaveButton.isEnabled()) {
+            kbContentsEditButtonActionPerformed(evt);
+        }
     }//GEN-LAST:event_kbContentsNewButtonActionPerformed
 
     private void kbContentsDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsDeleteButtonActionPerformed
-        notImplemeted();
+        if(showQuestionDialog("Do you really want to delete this?")==0) {
+            // delete item itself
+            DBHandler.deleteObject(currentKBEntry);
+            // refresh item list
+            kbIndexRefreshButtonActionPerformed(evt);
+            kbList.setSelectedIndex(0);
+            // clear gui
+            kbContentsTitle.setText("Deleted");
+            kbContentsCategory.setText("-");
+            kbContentsTextArea.setText("Entry just deleted...");
+            // clear unsaved changes gui markers
+            markUnsavedChanges(false, false);
+            // disallow changes for now
+            // TODO how to disallow saving page as new entry?
+            allowKBEdit(false);
+        }
     }//GEN-LAST:event_kbContentsDeleteButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -672,6 +722,7 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JScrollPane kbContentsScrollPane;
     private javax.swing.JTextArea kbContentsTextArea;
     private javax.swing.JLabel kbContentsTitle;
+    private javax.swing.JLabel kbContentsUnsavedMarker;
     private javax.swing.JMenuItem kbEntryMenuItem;
     private javax.swing.JLabel kbIndexLabel;
     private javax.swing.JButton kbIndexRefreshButton;
@@ -708,35 +759,58 @@ public class MainWin extends javax.swing.JFrame {
             // TODO log error
         }
         
-        // refresh knowledge base list and select index
+        // listener for kb items list browsing
+        // http://stackoverflow.com/a/5609251
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // get currently selected index entry
+                if (kbList.getSelectedIndex()<0) {
+                    kbList.setSelectedIndex(0);
+                }
+                String selectedItem = (String) kbList.getSelectedValue();
+                // load entry data from db
+                currentKBEntry = (KBEntry)DBHandler
+                        .getSingleObject("from KBEntry where entryTitle='" 
+                                + selectedItem + "'");
+                // fill gui elements with data
+                kbContentsTitle.setText(currentKBEntry.getEntryTitle());
+                kbContentsCategory.setText(currentKBEntry.getEntryCat());
+                kbContentsTextArea.setText(currentKBEntry.getEntryBody());
+                // clear unsaved changes gui markers
+                markUnsavedChanges(false, false);
+             }
+        };
+        kbList.addMouseListener(mouseListener); 
+        
+        // listener for kb contents body changes
+        // any change occured - unsaved marker appears
+        // http://stackoverflow.com/a/7740510
+        kbContentsTextArea.getDocument().addDocumentListener(
+                new DocumentListener() {
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    kbContentsUnsavedMarker.setVisible(true);
+                }
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    kbContentsUnsavedMarker.setVisible(true);
+                }
+                @Override
+                public void changedUpdate(DocumentEvent arg0) {
+                    kbContentsUnsavedMarker.setVisible(true);
+                }
+            }
+        );
+        
+        // refresh knowledge base list
         kbIndexRefreshButtonActionPerformed(null);
         // validate palette contents
         paletteElementsPanel.setLayout(new BoxLayout(paletteElementsPanel, 
                 BoxLayout.Y_AXIS));
         paletteCategorySelectActionPerformed(null);
-        
-        // http://stackoverflow.com/a/5609251
-        MouseListener mouseListener = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount()>0) {
-                   // get currently selected index entry
-                   if (kbList.getSelectedIndex()<0) {
-                       kbList.setSelectedIndex(0);
-                   }
-                   String selectedItem = (String) kbList.getSelectedValue();
-                   // load entry data from db
-                   KBEntry entry = (KBEntry)DBHandler
-                           .getSingleObject("from KBEntry where entryTitle='" 
-                                   + selectedItem + "'");
-                   // fill gui elements with data
-                   kbContentsTitle.setText(entry.getEntryTitle());
-                   kbContentsCategory.setText(entry.getEntryCat());
-                   kbContentsTextArea.setText(entry.getEntryBody());
-                 }
-            }
-        };
-        kbList.addMouseListener(mouseListener);       
+        // hide unsaved kb changes marker
+        kbContentsUnsavedMarker.setVisible(false);
     }
     
     private void notImplemeted() {
@@ -747,15 +821,38 @@ public class MainWin extends javax.swing.JFrame {
     private static class ClosingAdapter extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent we) { 
-            String ObjButtons[] = {"Yes", "No"};
-            int PromptResult = JOptionPane.showOptionDialog(null,
-                    "Exit program?", "VSEGraf",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
-                    null, ObjButtons, ObjButtons[1]);
-            if(PromptResult==0) {
+            if(showQuestionDialog("Exit program?")==0) {
                 System.exit(0);
             }
         }
     }
-
+    
+    private static int showQuestionDialog(String question) {
+        String ObjButtons[] = {"Yes", "No"};
+        return JOptionPane.showOptionDialog(null, question, "VSEGraf",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                    null, ObjButtons, ObjButtons[1]);
+    }
+    
+    private void allowKBEdit(boolean allow) {
+        kbContentsSaveButton.setEnabled(allow);
+        kbContentsEditTitleButton.setEnabled(allow);
+        kbContentsTextArea.setEditable(allow);
+        if (allow) {
+            kbContentsEditButton.setText("Close");
+        } else {
+            kbContentsEditButton.setText("Edit");
+        }
+    }
+    
+    private void markUnsavedChanges(boolean unsTitle, boolean unsBody) {
+        // unsaved title changes
+        if (unsTitle) {
+            kbContentsTitle.setForeground(Color.red);
+        } else {
+            kbContentsTitle.setForeground(Color.black);
+        }
+        // unsaved contents changes
+        kbContentsUnsavedMarker.setVisible(unsBody);
+    }
 }

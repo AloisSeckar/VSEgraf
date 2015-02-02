@@ -1,4 +1,4 @@
-// edit: 2015-01-31 21:09
+// edit: 2015-02-02 23:31
 // by:   AS
 
 package db;
@@ -51,8 +51,7 @@ public class KBEntry {
     
     // standard constructor
     
-    public KBEntry(int kbID, String eTitle, String eCat, String eBody) {
-        this.kbID = kbID;
+    public KBEntry(String eTitle, String eCat, String eBody) {
         this.entryTitle = eTitle;
         this.entryCat = eCat;
         this.entryBody = eBody;
