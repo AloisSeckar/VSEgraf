@@ -3,7 +3,7 @@
 // @author Alois Seckar [ ellrohir@seznam.cz ]
 // @version 0.1
 //
-// Last modified: 2015-02-02 2336 GMT by Alois Seckar
+// Last modified: 2015-02-03 2353 GMT by Alois Seckar
 
 package gui;
 
@@ -64,7 +64,7 @@ public class MainWin extends javax.swing.JFrame {
         mainPanel = new javax.swing.JTabbedPane();
         canvasPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel4 = new javax.swing.JPanel();
+        canvasArea = new javax.swing.JPanel();
         kbPanel = new javax.swing.JPanel();
         kbIndexLabel = new javax.swing.JLabel();
         kbContentsTitle = new javax.swing.JLabel();
@@ -86,11 +86,12 @@ public class MainWin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         paletteCategorySelect = new javax.swing.JComboBox();
         paletteElementsPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        metadataPanel = new javax.swing.JPanel();
+        metadataLabel = new javax.swing.JLabel();
+        metadataLabelName = new javax.swing.JLabel();
+        metadataLabelType = new javax.swing.JLabel();
+        metadataLabelAuthor = new javax.swing.JLabel();
+        metadataChangeButton = new javax.swing.JButton();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newGraphMenuItem = new javax.swing.JMenuItem();
@@ -115,31 +116,37 @@ public class MainWin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("VSEGraf");
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        mainPanel.setBackground(new java.awt.Color(204, 0, 204));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jScrollPane1.setPreferredSize(null);
+
+        canvasArea.setBackground(new java.awt.Color(255, 255, 255));
+        canvasArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        canvasArea.setPreferredSize(null);
+
+        javax.swing.GroupLayout canvasAreaLayout = new javax.swing.GroupLayout(canvasArea);
+        canvasArea.setLayout(canvasAreaLayout);
+        canvasAreaLayout.setHorizontalGroup(
+            canvasAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 523, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        canvasAreaLayout.setVerticalGroup(
+            canvasAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 294, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(jPanel4);
+        jScrollPane1.setViewportView(canvasArea);
+        canvasArea.getAccessibleContext().setAccessibleName("");
 
         javax.swing.GroupLayout canvasPanelLayout = new javax.swing.GroupLayout(canvasPanel);
         canvasPanel.setLayout(canvasPanelLayout);
         canvasPanelLayout.setHorizontalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
         );
 
         mainPanel.addTab("Graph Canvas", canvasPanel);
@@ -178,6 +185,7 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsTextArea.setLineWrap(true);
         kbContentsTextArea.setRows(5);
         kbContentsTextArea.setWrapStyleWord(true);
+        kbContentsTextArea.setPreferredSize(null);
         kbContentsScrollPane.setViewportView(kbContentsTextArea);
 
         kbIndexRefreshButton.setText("Refresh");
@@ -231,27 +239,29 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbIndexScrollPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kbContentsScrollPane)
                     .addGroup(kbPanelLayout.createSequentialGroup()
-                        .addComponent(kbContentsTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbContentsEditTitleButton)
-                        .addGap(116, 116, 116)
-                        .addComponent(kbContentsCategoryLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbContentsCategory)
-                        .addGap(0, 125, Short.MAX_VALUE))
-                    .addGroup(kbPanelLayout.createSequentialGroup()
-                        .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbContentsDeleteButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(kbContentsUnsavedMarker)))
-                .addContainerGap())
+                        .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(kbPanelLayout.createSequentialGroup()
+                                .addComponent(kbContentsTitle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsEditTitleButton)
+                                .addGap(116, 116, 116)
+                                .addComponent(kbContentsCategoryLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsCategory)
+                                .addGap(0, 125, Short.MAX_VALUE))
+                            .addGroup(kbPanelLayout.createSequentialGroup()
+                                .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsDeleteButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(kbContentsUnsavedMarker)))
+                        .addContainerGap())
+                    .addComponent(kbContentsScrollPane)))
         );
         kbPanelLayout.setVerticalGroup(
             kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,7 +275,7 @@ public class MainWin extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(kbContentsScrollPane)
-                    .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                    .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kbIndexRefreshButton)
@@ -309,7 +319,7 @@ public class MainWin extends javax.swing.JFrame {
             .addGroup(palettePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paletteCategorySelect, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(paletteCategorySelect, 0, 97, Short.MAX_VALUE)
                     .addGroup(palettePanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -328,66 +338,71 @@ public class MainWin extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(153, 102, 255));
+        metadataPanel.setBackground(new java.awt.Color(153, 102, 255));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setText("Metadata");
+        metadataLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        metadataLabel.setText("Metadata");
 
-        jLabel3.setText("Graph name");
+        metadataLabelName.setText("Graph name");
 
-        jLabel4.setText("Graph type");
+        metadataLabelType.setText("Graph type");
 
-        jLabel5.setText("Graph author");
+        metadataLabelAuthor.setText("Graph author");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        metadataChangeButton.setText("Change");
+        metadataChangeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                metadataChangeButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout metadataPanelLayout = new javax.swing.GroupLayout(metadataPanel);
+        metadataPanel.setLayout(metadataPanelLayout);
+        metadataPanelLayout.setHorizontalGroup(
+            metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(metadataPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGroup(metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(metadataLabel)
+                    .addComponent(metadataLabelName)
+                    .addComponent(metadataLabelType)
+                    .addComponent(metadataLabelAuthor)
+                    .addComponent(metadataChangeButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        metadataPanelLayout.setVerticalGroup(
+            metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(metadataPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(metadataLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
+                .addComponent(metadataLabelName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addComponent(metadataLabelType)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addComponent(metadataLabelAuthor)
+                .addGap(26, 26, 26)
+                .addComponent(metadataChangeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
         sidePanel.setLayout(sidePanelLayout);
         sidePanelLayout.setHorizontalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(sidePanelLayout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(sidePanelLayout.createSequentialGroup()
-                        .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(metadataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         sidePanelLayout.setVerticalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sidePanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(metadataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         fileMenu.setText("File");
@@ -513,9 +528,9 @@ public class MainWin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -593,7 +608,7 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_exportTXTMenuItemActionPerformed
 
     private void metadataMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metadataMenuItemActionPerformed
-        notImplemeted();
+        metadataChangeButtonActionPerformed(evt);
     }//GEN-LAST:event_metadataMenuItemActionPerformed
 
     private void kbEntryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbEntryMenuItemActionPerformed
@@ -690,8 +705,29 @@ public class MainWin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_kbContentsDeleteButtonActionPerformed
 
+    private void metadataChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metadataChangeButtonActionPerformed
+        JTextField metaName = new JTextField(metadataLabelName.getText());                                                  
+        JTextField metaType = new JTextField(metadataLabelType.getText());                                                  
+        JTextField metaAuthor = new JTextField(metadataLabelAuthor.getText());
+        final JComponent[] inputs = new JComponent[] {
+            new JLabel("Set graph name:"),
+            metaName,
+            new JLabel("Set graph type:"),
+            metaType,
+            new JLabel("Set graph author:"),
+            metaAuthor
+        };
+        JOptionPane.showMessageDialog(null, inputs, "VSEGraf - metadata", 
+                JOptionPane.PLAIN_MESSAGE);
+        //
+        metadataLabelName.setText(metaName.getText()); 
+        metadataLabelType.setText(metaType.getText());  
+        metadataLabelAuthor.setText(metaAuthor.getText());  
+    }//GEN-LAST:event_metadataChangeButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JPanel canvasArea;
     private javax.swing.JPanel canvasPanel;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
@@ -702,12 +738,6 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
@@ -732,7 +762,13 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JMenuItem loadGraphMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JTabbedPane mainPanel;
+    private javax.swing.JButton metadataChangeButton;
+    private javax.swing.JLabel metadataLabel;
+    private javax.swing.JLabel metadataLabelAuthor;
+    private javax.swing.JLabel metadataLabelName;
+    private javax.swing.JLabel metadataLabelType;
     private javax.swing.JMenuItem metadataMenuItem;
+    private javax.swing.JPanel metadataPanel;
     private javax.swing.JMenuItem newGraphMenuItem;
     private javax.swing.JMenu optionsMenu;
     private javax.swing.JComboBox paletteCategorySelect;
