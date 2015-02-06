@@ -1,4 +1,4 @@
-// edit: 2015-02-02 23:31
+// edit: 2015-02-06 16:10
 // by:   AS
 
 package db;
@@ -39,6 +39,18 @@ public class KBEntry {
      * Text with possibilty to use supported tags for formatting and linking.
      */
     private String entryBody;
+    
+    /**
+     * DB ID of entry original author.
+     */
+    private int entryAuthor;
+    
+    /**
+     * DB ID of entry last editor.
+     */
+    private int entryLastEdit;
+            
+            
 
     // ************************** \\
     // *      CONSTRUCTORS      * \\
@@ -51,10 +63,11 @@ public class KBEntry {
     
     // standard constructor
     
-    public KBEntry(String eTitle, String eCat, String eBody) {
+    public KBEntry(String eTitle, String eCat, String eBody, int eAuthor) {
         this.entryTitle = eTitle;
         this.entryCat = eCat;
         this.entryBody = eBody;
+        this.entryAuthor = eAuthor;
     }
 
     // ************************** \\
@@ -93,6 +106,22 @@ public class KBEntry {
 
     public void setEntryBody(String entryBody) {
         this.entryBody = entryBody;
+    }
+
+    public int getEntryAuthor() {
+        return entryAuthor;
+    }
+
+    public void setEntryAuthor(int entryAuthor) {
+        this.entryAuthor = entryAuthor;
+    }
+
+    public int getEntryLastEdit() {
+        return entryLastEdit;
+    }
+
+    public void setEntryLastEdit(int entryLastEdit) {
+        this.entryLastEdit = entryLastEdit;
     }
 
     // ************************** \\

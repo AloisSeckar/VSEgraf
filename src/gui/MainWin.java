@@ -3,12 +3,13 @@
 // @author Alois Seckar [ ellrohir@seznam.cz ]
 // @version 0.1
 //
-// Last modified: 2015-02-03 2353 GMT by Alois Seckar
+// Last modified: 2015-02-06 1835 GMT by Alois Seckar
 
 package gui;
 
 import db.DBHandler;
 import db.KBEntry;
+import db.DBUser;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
@@ -29,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -39,6 +41,8 @@ public class MainWin extends javax.swing.JFrame {
     private static final MainWin instance = new MainWin();
     
     private KBEntry currentKBEntry;
+    
+    private int currentUser = 0;
 
     /**
      * Creates new form MainWin
@@ -61,6 +65,17 @@ public class MainWin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        sidePanel = new javax.swing.JPanel();
+        palettePanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        paletteCategorySelect = new javax.swing.JComboBox();
+        paletteElementsPanel = new javax.swing.JPanel();
+        metadataPanel = new javax.swing.JPanel();
+        metadataLabel = new javax.swing.JLabel();
+        metadataLabelName = new javax.swing.JLabel();
+        metadataLabelType = new javax.swing.JLabel();
+        metadataLabelAuthor = new javax.swing.JLabel();
+        metadataChangeButton = new javax.swing.JButton();
         mainPanel = new javax.swing.JTabbedPane();
         canvasPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -81,17 +96,8 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsNewButton = new javax.swing.JButton();
         kbContentsDeleteButton = new javax.swing.JButton();
         kbContentsUnsavedMarker = new javax.swing.JLabel();
-        sidePanel = new javax.swing.JPanel();
-        palettePanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        paletteCategorySelect = new javax.swing.JComboBox();
-        paletteElementsPanel = new javax.swing.JPanel();
-        metadataPanel = new javax.swing.JPanel();
-        metadataLabel = new javax.swing.JLabel();
-        metadataLabelName = new javax.swing.JLabel();
-        metadataLabelType = new javax.swing.JLabel();
-        metadataLabelAuthor = new javax.swing.JLabel();
-        metadataChangeButton = new javax.swing.JButton();
+        statusPanel = new javax.swing.JPanel();
+        currentUserLabel = new javax.swing.JLabel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newGraphMenuItem = new javax.swing.JMenuItem();
@@ -104,6 +110,12 @@ public class MainWin extends javax.swing.JFrame {
         exportTXTMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
+        userMenu = new javax.swing.JMenu();
+        loginMenuItem = new javax.swing.JMenuItem();
+        logoutMenuItem = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        changeNameMenuItem = new javax.swing.JMenuItem();
+        changePassMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         metadataMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -116,23 +128,144 @@ public class MainWin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("VSEGraf");
 
-        mainPanel.setBackground(new java.awt.Color(204, 0, 204));
+        sidePanel.setMaximumSize(null);
+        sidePanel.setMinimumSize(null);
+        sidePanel.setName(""); // NOI18N
 
-        jScrollPane1.setPreferredSize(null);
+        palettePanel.setBackground(new java.awt.Color(102, 102, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("Palette");
+
+        paletteCategorySelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Graph type 1", "Graph type 2", "Graph type 3" }));
+        paletteCategorySelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paletteCategorySelectActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout paletteElementsPanelLayout = new javax.swing.GroupLayout(paletteElementsPanel);
+        paletteElementsPanel.setLayout(paletteElementsPanelLayout);
+        paletteElementsPanelLayout.setHorizontalGroup(
+            paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        paletteElementsPanelLayout.setVerticalGroup(
+            paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout palettePanelLayout = new javax.swing.GroupLayout(palettePanel);
+        palettePanel.setLayout(palettePanelLayout);
+        palettePanelLayout.setHorizontalGroup(
+            palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(palettePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(paletteCategorySelect, 0, 140, Short.MAX_VALUE)
+                    .addGroup(palettePanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(paletteElementsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        palettePanelLayout.setVerticalGroup(
+            palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(palettePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(paletteCategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(paletteElementsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        metadataPanel.setBackground(new java.awt.Color(153, 102, 255));
+
+        metadataLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        metadataLabel.setText("Metadata");
+
+        metadataLabelName.setText("Graph name");
+
+        metadataLabelType.setText("Graph type");
+
+        metadataLabelAuthor.setText("Graph author");
+
+        metadataChangeButton.setText("Change");
+        metadataChangeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                metadataChangeButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout metadataPanelLayout = new javax.swing.GroupLayout(metadataPanel);
+        metadataPanel.setLayout(metadataPanelLayout);
+        metadataPanelLayout.setHorizontalGroup(
+            metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(metadataPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(metadataLabel)
+                    .addComponent(metadataLabelName)
+                    .addComponent(metadataLabelType)
+                    .addComponent(metadataLabelAuthor)
+                    .addComponent(metadataChangeButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        metadataPanelLayout.setVerticalGroup(
+            metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(metadataPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(metadataLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(metadataLabelName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(metadataLabelType)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(metadataLabelAuthor)
+                .addGap(26, 26, 26)
+                .addComponent(metadataChangeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
+        sidePanel.setLayout(sidePanelLayout);
+        sidePanelLayout.setHorizontalGroup(
+            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(metadataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        sidePanelLayout.setVerticalGroup(
+            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sidePanelLayout.createSequentialGroup()
+                .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(metadataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        getContentPane().add(sidePanel, java.awt.BorderLayout.WEST);
+
+        mainPanel.setBackground(new java.awt.Color(204, 0, 204));
+        mainPanel.setMaximumSize(null);
+        mainPanel.setMinimumSize(null);
 
         canvasArea.setBackground(new java.awt.Color(255, 255, 255));
         canvasArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        canvasArea.setPreferredSize(null);
 
         javax.swing.GroupLayout canvasAreaLayout = new javax.swing.GroupLayout(canvasArea);
         canvasArea.setLayout(canvasAreaLayout);
         canvasAreaLayout.setHorizontalGroup(
             canvasAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 523, Short.MAX_VALUE)
+            .addGap(0, 943, Short.MAX_VALUE)
         );
         canvasAreaLayout.setVerticalGroup(
             canvasAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 294, Short.MAX_VALUE)
+            .addGap(0, 398, Short.MAX_VALUE)
         );
 
         jScrollPane1.setViewportView(canvasArea);
@@ -142,11 +275,11 @@ public class MainWin extends javax.swing.JFrame {
         canvasPanel.setLayout(canvasPanelLayout);
         canvasPanelLayout.setHorizontalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
         );
 
         mainPanel.addTab("Graph Canvas", canvasPanel);
@@ -249,7 +382,7 @@ public class MainWin extends javax.swing.JFrame {
                                 .addComponent(kbContentsCategoryLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsCategory)
-                                .addGap(0, 125, Short.MAX_VALUE))
+                                .addGap(0, 378, Short.MAX_VALUE))
                             .addGroup(kbPanelLayout.createSequentialGroup()
                                 .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -274,8 +407,8 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbContentsCategory))
                 .addGap(4, 4, 4)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kbContentsScrollPane)
-                    .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
+                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                    .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kbIndexRefreshButton)
@@ -289,121 +422,30 @@ public class MainWin extends javax.swing.JFrame {
 
         mainPanel.addTab("Knowledge Base", kbPanel);
 
-        palettePanel.setBackground(new java.awt.Color(102, 102, 255));
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel1.setText("Palette");
+        statusPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        paletteCategorySelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Graph type 1", "Graph type 2", "Graph type 3" }));
-        paletteCategorySelect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                paletteCategorySelectActionPerformed(evt);
-            }
-        });
+        currentUserLabel.setText("Anonymous");
 
-        javax.swing.GroupLayout paletteElementsPanelLayout = new javax.swing.GroupLayout(paletteElementsPanel);
-        paletteElementsPanel.setLayout(paletteElementsPanelLayout);
-        paletteElementsPanelLayout.setHorizontalGroup(
-            paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        paletteElementsPanelLayout.setVerticalGroup(
-            paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout palettePanelLayout = new javax.swing.GroupLayout(palettePanel);
-        palettePanel.setLayout(palettePanelLayout);
-        palettePanelLayout.setHorizontalGroup(
-            palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(palettePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paletteCategorySelect, 0, 97, Short.MAX_VALUE)
-                    .addGroup(palettePanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(paletteElementsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
+        statusPanel.setLayout(statusPanelLayout);
+        statusPanelLayout.setHorizontalGroup(
+            statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
+                .addContainerGap(863, Short.MAX_VALUE)
+                .addComponent(currentUserLabel)
                 .addContainerGap())
         );
-        palettePanelLayout.setVerticalGroup(
-            palettePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(palettePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paletteCategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paletteElementsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        metadataPanel.setBackground(new java.awt.Color(153, 102, 255));
-
-        metadataLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        metadataLabel.setText("Metadata");
-
-        metadataLabelName.setText("Graph name");
-
-        metadataLabelType.setText("Graph type");
-
-        metadataLabelAuthor.setText("Graph author");
-
-        metadataChangeButton.setText("Change");
-        metadataChangeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                metadataChangeButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout metadataPanelLayout = new javax.swing.GroupLayout(metadataPanel);
-        metadataPanel.setLayout(metadataPanelLayout);
-        metadataPanelLayout.setHorizontalGroup(
-            metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(metadataPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(metadataLabel)
-                    .addComponent(metadataLabelName)
-                    .addComponent(metadataLabelType)
-                    .addComponent(metadataLabelAuthor)
-                    .addComponent(metadataChangeButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        metadataPanelLayout.setVerticalGroup(
-            metadataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(metadataPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(metadataLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(metadataLabelName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(metadataLabelType)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(metadataLabelAuthor)
-                .addGap(26, 26, 26)
-                .addComponent(metadataChangeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
-        sidePanel.setLayout(sidePanelLayout);
-        sidePanelLayout.setHorizontalGroup(
-            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(metadataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        statusPanelLayout.setVerticalGroup(
+            statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(currentUserLabel)
                 .addContainerGap())
         );
-        sidePanelLayout.setVerticalGroup(
-            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelLayout.createSequentialGroup()
-                .addComponent(palettePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(metadataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+
+        getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
         fileMenu.setText("File");
 
@@ -475,6 +517,46 @@ public class MainWin extends javax.swing.JFrame {
 
         mainMenuBar.add(fileMenu);
 
+        userMenu.setText("User");
+
+        loginMenuItem.setText("Login...");
+        loginMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginMenuItemActionPerformed(evt);
+            }
+        });
+        userMenu.add(loginMenuItem);
+
+        logoutMenuItem.setText("Logout...");
+        logoutMenuItem.setEnabled(false);
+        logoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutMenuItemActionPerformed(evt);
+            }
+        });
+        userMenu.add(logoutMenuItem);
+        userMenu.add(jSeparator4);
+
+        changeNameMenuItem.setText("Change display name");
+        changeNameMenuItem.setEnabled(false);
+        changeNameMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeNameMenuItemActionPerformed(evt);
+            }
+        });
+        userMenu.add(changeNameMenuItem);
+
+        changePassMenuItem.setText("Change password");
+        changePassMenuItem.setEnabled(false);
+        changePassMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePassMenuItemActionPerformed(evt);
+            }
+        });
+        userMenu.add(changePassMenuItem);
+
+        mainMenuBar.add(userMenu);
+
         editMenu.setText("Edit");
 
         metadataMenuItem.setText("Graph metadata");
@@ -522,27 +604,6 @@ public class MainWin extends javax.swing.JFrame {
 
         setJMenuBar(mainMenuBar);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -559,19 +620,27 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbIndexRefreshButtonActionPerformed
 
     private void kbContentsEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditButtonActionPerformed
-        allowKBEdit(!kbContentsSaveButton.isEnabled());
+        if (currentUser>0) {
+            allowKBEdit(!kbContentsSaveButton.isEnabled());
+        } else {
+            throwNotLoggedInMessage();
+        }
     }//GEN-LAST:event_kbContentsEditButtonActionPerformed
 
     private void kbContentsSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsSaveButtonActionPerformed
-        // get edited values
-        currentKBEntry.setEntryTitle(kbContentsTitle.getText());
-        currentKBEntry.setEntryBody(kbContentsTextArea.getText());
-        // update DB entry
-        DBHandler.updateObject(currentKBEntry);
-        // update items list as entry title might have changed
-        kbIndexRefreshButtonActionPerformed(null);
-        // clear unsaved changes gui markers
-        markUnsavedChanges(false, false);
+        if (currentUser>0) {
+            // get edited values
+            currentKBEntry.setEntryTitle(kbContentsTitle.getText());
+            currentKBEntry.setEntryBody(kbContentsTextArea.getText());
+            // update DB entry
+            DBHandler.updateObject(currentKBEntry);
+            // update items list as entry title might have changed
+            kbIndexRefreshButtonActionPerformed(null);
+            // clear unsaved changes gui markers
+            markUnsavedChanges(false, false);
+        } else {
+            throwNotLoggedInMessage();
+        }
     }//GEN-LAST:event_kbContentsSaveButtonActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -649,59 +718,72 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_paletteCategorySelectActionPerformed
 
     private void kbContentsEditTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditTitleButtonActionPerformed
-        // inspired by:
-        // http://stackoverflow.com/a/790224
-        JTextField entryTitle = new JTextField(currentKBEntry.getEntryTitle());
-        final JComponent[] inputs = new JComponent[] {
-            new JLabel("Set title:"),
-            entryTitle
-        };
-        JOptionPane.showMessageDialog(null, inputs, "VSEGraf - editing", 
-                JOptionPane.PLAIN_MESSAGE);
-        //
-        if (!currentKBEntry.getEntryTitle().equals(entryTitle.getText())) {
-            currentKBEntry.setEntryTitle(entryTitle.getText());
-            kbContentsTitle.setText(entryTitle.getText());
-            // mark unsaved changes
-            markUnsavedChanges(true, true);
+        if (currentUser>0) {
+            // inspired by:
+            // http://stackoverflow.com/a/790224
+            JTextField entryTitle = new JTextField(currentKBEntry.getEntryTitle());
+            final JComponent[] inputs = new JComponent[] {
+                new JLabel("Set title:"),
+                entryTitle
+            };
+            JOptionPane.showMessageDialog(null, inputs, "VSEGraf - editing", 
+                    JOptionPane.PLAIN_MESSAGE);
+            //
+            if (!currentKBEntry.getEntryTitle().equals(entryTitle.getText())) {
+                currentKBEntry.setEntryTitle(entryTitle.getText());
+                kbContentsTitle.setText(entryTitle.getText());
+                // mark unsaved changes
+                markUnsavedChanges(true, true);
+            }
+        } else {
+            throwNotLoggedInMessage();
         }
     }//GEN-LAST:event_kbContentsEditTitleButtonActionPerformed
 
     private void kbContentsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsNewButtonActionPerformed
-        // create plain new entry and save it to db
-        currentKBEntry = new KBEntry("New entry", "General", "Start typing contents...");
-        DBHandler.saveObject(currentKBEntry);
-        // update gui elements with new values
-        kbContentsTitle.setText(currentKBEntry.getEntryTitle());
-        kbContentsCategory.setText(currentKBEntry.getEntryCat());
-        kbContentsTextArea.setText(currentKBEntry.getEntryBody());
-        // clear unsaved changes gui markers (initial entry was saved)
-        markUnsavedChanges(false, false);
-        // update items list
-        kbIndexRefreshButtonActionPerformed(null);
-        kbList.setSelectedIndex(kbList.getModel().getSize()-1);
-        // allow editing if not enabled yet
-        if (!kbContentsSaveButton.isEnabled()) {
-            kbContentsEditButtonActionPerformed(evt);
+        if (currentUser>0) {
+            // create plain new entry and save it to db
+            currentKBEntry = new KBEntry("New entry", "General", 
+                    "Start typing contents...", currentUser);
+            DBHandler.saveObject(currentKBEntry);
+            // update gui elements with new values
+            kbContentsTitle.setText(currentKBEntry.getEntryTitle());
+            kbContentsCategory.setText(currentKBEntry.getEntryCat());
+            kbContentsTextArea.setText(currentKBEntry.getEntryBody());
+            // clear unsaved changes gui markers (initial entry was saved)
+            markUnsavedChanges(false, false);
+            // update items list
+            kbIndexRefreshButtonActionPerformed(null);
+            kbList.setSelectedIndex(kbList.getModel().getSize()-1);
+            // allow editing if not enabled yet
+            if (!kbContentsSaveButton.isEnabled()) {
+                kbContentsEditButtonActionPerformed(evt);
+            }
+        } else {
+            throwNotLoggedInMessage();
         }
     }//GEN-LAST:event_kbContentsNewButtonActionPerformed
 
     private void kbContentsDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsDeleteButtonActionPerformed
-        if(showQuestionDialog("Do you really want to delete this?")==0) {
-            // delete item itself
-            DBHandler.deleteObject(currentKBEntry);
-            // refresh item list
-            kbIndexRefreshButtonActionPerformed(evt);
-            kbList.setSelectedIndex(0);
-            // clear gui
-            kbContentsTitle.setText("Deleted");
-            kbContentsCategory.setText("-");
-            kbContentsTextArea.setText("Entry just deleted...");
-            // clear unsaved changes gui markers
-            markUnsavedChanges(false, false);
-            // disallow changes for now
-            // TODO how to disallow saving page as new entry?
-            allowKBEdit(false);
+        if (currentUser>0) {
+            if (showQuestionDialog("Do you really want to delete this?")==0) {
+                // delete item itself
+                DBHandler.deleteObject(currentKBEntry);
+                // refresh item list
+                kbIndexRefreshButtonActionPerformed(evt);
+                kbList.setSelectedIndex(0);
+                // clear gui
+                kbContentsTitle.setText("Deleted");
+                kbContentsCategory.setText("-");
+                kbContentsTextArea.setText("Entry just deleted...");
+                // clear unsaved changes gui markers
+                markUnsavedChanges(false, false);
+                // disallow changes for now
+                // TODO how to disallow saving page as new entry?
+                allowKBEdit(false);
+            }
+        } else {
+            throwNotLoggedInMessage();
         }
     }//GEN-LAST:event_kbContentsDeleteButtonActionPerformed
 
@@ -717,7 +799,7 @@ public class MainWin extends javax.swing.JFrame {
             new JLabel("Set graph author:"),
             metaAuthor
         };
-        JOptionPane.showMessageDialog(null, inputs, "VSEGraf - metadata", 
+        JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - metadata", 
                 JOptionPane.PLAIN_MESSAGE);
         //
         metadataLabelName.setText(metaName.getText()); 
@@ -725,10 +807,29 @@ public class MainWin extends javax.swing.JFrame {
         metadataLabelAuthor.setText(metaAuthor.getText());  
     }//GEN-LAST:event_metadataChangeButtonActionPerformed
 
+    private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed
+        loginAction();
+    }//GEN-LAST:event_loginMenuItemActionPerformed
+
+    private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
+        logoutAction();
+    }//GEN-LAST:event_logoutMenuItemActionPerformed
+
+    private void changeNameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeNameMenuItemActionPerformed
+        notImplemeted();
+    }//GEN-LAST:event_changeNameMenuItemActionPerformed
+
+    private void changePassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePassMenuItemActionPerformed
+        notImplemeted();
+    }//GEN-LAST:event_changePassMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel canvasArea;
     private javax.swing.JPanel canvasPanel;
+    private javax.swing.JMenuItem changeNameMenuItem;
+    private javax.swing.JMenuItem changePassMenuItem;
+    private javax.swing.JLabel currentUserLabel;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem exportPDFMenuItem;
@@ -742,6 +843,7 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JLabel kbContentsCategory;
     private javax.swing.JLabel kbContentsCategoryLabel;
     private javax.swing.JButton kbContentsDeleteButton;
@@ -760,6 +862,8 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JList kbList;
     private javax.swing.JPanel kbPanel;
     private javax.swing.JMenuItem loadGraphMenuItem;
+    private javax.swing.JMenuItem loginMenuItem;
+    private javax.swing.JMenuItem logoutMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JTabbedPane mainPanel;
     private javax.swing.JButton metadataChangeButton;
@@ -777,6 +881,8 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JMenuItem preferencesMenuItem;
     private javax.swing.JMenuItem saveGraphMenuItem;
     private javax.swing.JPanel sidePanel;
+    private javax.swing.JPanel statusPanel;
+    private javax.swing.JMenu userMenu;
     // End of variables declaration//GEN-END:variables
 
     private void finalizeComponents() {
@@ -847,25 +953,104 @@ public class MainWin extends javax.swing.JFrame {
         paletteCategorySelectActionPerformed(null);
         // hide unsaved kb changes marker
         kbContentsUnsavedMarker.setVisible(false);
+        // initally hide all kb editing buttons
+        showKBEditingTools(false);
     }
     
     private void notImplemeted() {
         JOptionPane.showMessageDialog(instance, "Not implemented yet...", 
                 "VSEGraf", JOptionPane.INFORMATION_MESSAGE);
     }
+
+    private void throwNotLoggedInMessage() {
+        JOptionPane.showMessageDialog(instance, "You are not logged in!", 
+                    "VSEGraf - editing", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void loginAction() {
+        // TODO log input
+        JTextField userLogin = new JTextField();                                                  
+        JTextField userPass = new JTextField();                               
+        final JComponent[] inputs = new JComponent[] {
+            new JLabel("Login:"),
+            userLogin,
+            new JLabel("Password:"),
+            userPass
+        };
+        JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - login", 
+                JOptionPane.PLAIN_MESSAGE);
+        // try to retrieve user under given xname from db
+//        // test values
+//        JTextField userLogin = new JTextField("xseca00");                                                  
+//        JTextField userPass = new JTextField("heslo"); 
+        Object obj = DBHandler.getSingleObject("FROM DBUser WHERE xname='" 
+                + userLogin.getText() + "'");
+        // test if user exists
+        if (obj instanceof DBUser) {
+            // get user data from db
+            DBUser user = (DBUser)obj;
+            // hash password input
+            // http://stackoverflow.com/a/6706816/3204544
+            String hPass = DigestUtils.sha1Hex(userPass.getText());
+            // compare
+            if (user.getUserPass().equals(hPass)) {
+                // process login
+                currentUser = user.getUserID();
+                // show kb entry inputs and related menu options
+                showKBEditingTools(true);
+                allowLoginMenuOptions(true);
+                // display user name at status bar
+                currentUserLabel.setText(user.getUserName());
+                currentUserLabel.setForeground(Color.GREEN);
+                // TODO auto-update metadata
+                // inform user
+                JOptionPane.showMessageDialog(instance, "You are now logged in", 
+                    "VSEGraf - login", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(instance, 
+                     "Wrong login or password!", "VSEGraf - login", 
+                     JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(instance, "Wrong login or password!", 
+                    "VSEGraf - login", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void allowLoginMenuOptions(boolean allow) {
+        loginMenuItem.setEnabled(!allow);
+        logoutMenuItem.setEnabled(allow);
+        changeNameMenuItem.setEnabled(allow);
+        changePassMenuItem.setEnabled(allow);
+    }
+
+    private void logoutAction() {
+        // process logout
+        currentUser = 0;
+        // hide kb entry inputs and related menu options
+        showKBEditingTools(false);
+        allowLoginMenuOptions(false);
+        // clear user name from status bar
+        currentUserLabel.setText("Anonymous");
+        currentUserLabel.setForeground(Color.BLACK);
+        // TODO autoupdate metadata
+        // inform user
+        JOptionPane.showMessageDialog(instance, "You are now logged out", 
+            "VSEGraf - login", JOptionPane.INFORMATION_MESSAGE);
+    }
     
-    private static class ClosingAdapter extends WindowAdapter {
+    private class ClosingAdapter extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent we) { 
-            if(showQuestionDialog("Exit program?")==0) {
+            if (showQuestionDialog("Exit program?")==0) {
                 System.exit(0);
             }
         }
     }
     
-    private static int showQuestionDialog(String question) {
+    private int showQuestionDialog(String question) {
         String ObjButtons[] = {"Yes", "No"};
-        return JOptionPane.showOptionDialog(null, question, "VSEGraf",
+        return JOptionPane.showOptionDialog(instance, question, "VSEGraf",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
                     null, ObjButtons, ObjButtons[1]);
     }
@@ -890,5 +1075,13 @@ public class MainWin extends javax.swing.JFrame {
         }
         // unsaved contents changes
         kbContentsUnsavedMarker.setVisible(unsBody);
+    }
+    
+    private void showKBEditingTools(boolean show) {
+        kbContentsEditButton.setVisible(show);
+        kbContentsEditTitleButton.setVisible(show);
+        kbContentsSaveButton.setVisible(show);
+        kbContentsNewButton.setVisible(show);
+        kbContentsDeleteButton.setVisible(show);
     }
 }

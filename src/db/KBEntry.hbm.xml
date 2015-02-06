@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="db">
   <class name="KBEntry">
     <id column="id" name="kbID" type="int">
@@ -8,5 +8,7 @@
     <property column="title" name="entryTitle" type="string" length="50" />
     <property column="cat" name="entryCat" type="string" length="50" />
     <property column="body" name="entryBody" type="text"/>
+    <property column="author" name="entryAuthor" type="int"/>
+    <property column="editor" name="entryLastEdit" type="int"/>
   </class>
 </hibernate-mapping>
