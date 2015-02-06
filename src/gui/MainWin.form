@@ -503,7 +503,11 @@
                                       <Component id="kbContentsCategoryLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="kbContentsCategory" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="378" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="163" max="-2" attributes="0"/>
+                                      <Component id="kbContentsLastEditLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="kbContentsLastEdit" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="132" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="kbContentsEditButton" min="-2" pref="70" max="-2" attributes="0"/>
@@ -533,6 +537,8 @@
                           <Component id="kbContentsEditTitleButton" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                           <Component id="kbContentsCategoryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="kbContentsCategory" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="kbContentsLastEditLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="kbContentsLastEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -581,6 +587,19 @@
                   <Font name="Tahoma" size="11" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cat"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="kbContentsLastEditLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Last edit:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="kbContentsLastEdit">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="11" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Name"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="kbContentsEditTitleButton">

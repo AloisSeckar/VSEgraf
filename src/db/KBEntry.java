@@ -1,4 +1,4 @@
-// edit: 2015-02-06 16:10
+// edit: 2015-02-06 19:20
 // by:   AS
 
 package db;
@@ -68,6 +68,7 @@ public class KBEntry {
         this.entryCat = eCat;
         this.entryBody = eBody;
         this.entryAuthor = eAuthor;
+        this.entryLastEdit = eAuthor;
     }
 
     // ************************** \\

@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -85,6 +86,8 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsTitle = new javax.swing.JLabel();
         kbContentsCategoryLabel = new javax.swing.JLabel();
         kbContentsCategory = new javax.swing.JLabel();
+        kbContentsLastEditLabel = new javax.swing.JLabel();
+        kbContentsLastEdit = new javax.swing.JLabel();
         kbContentsEditTitleButton = new javax.swing.JButton();
         kbIndexScrollPane = new javax.swing.JScrollPane();
         kbList = new javax.swing.JList();
@@ -129,7 +132,6 @@ public class MainWin extends javax.swing.JFrame {
         setTitle("VSEGraf");
 
         sidePanel.setMaximumSize(null);
-        sidePanel.setMinimumSize(null);
         sidePanel.setName(""); // NOI18N
 
         palettePanel.setBackground(new java.awt.Color(102, 102, 255));
@@ -252,7 +254,6 @@ public class MainWin extends javax.swing.JFrame {
 
         mainPanel.setBackground(new java.awt.Color(204, 0, 204));
         mainPanel.setMaximumSize(null);
-        mainPanel.setMinimumSize(null);
 
         canvasArea.setBackground(new java.awt.Color(255, 255, 255));
         canvasArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -294,6 +295,11 @@ public class MainWin extends javax.swing.JFrame {
 
         kbContentsCategory.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         kbContentsCategory.setText("Cat");
+
+        kbContentsLastEditLabel.setText("Last edit:");
+
+        kbContentsLastEdit.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        kbContentsLastEdit.setText("Name");
 
         kbContentsEditTitleButton.setText("Edit");
         kbContentsEditTitleButton.setEnabled(false);
@@ -382,7 +388,11 @@ public class MainWin extends javax.swing.JFrame {
                                 .addComponent(kbContentsCategoryLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsCategory)
-                                .addGap(0, 378, Short.MAX_VALUE))
+                                .addGap(163, 163, 163)
+                                .addComponent(kbContentsLastEditLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsLastEdit)
+                                .addGap(0, 132, Short.MAX_VALUE))
                             .addGroup(kbPanelLayout.createSequentialGroup()
                                 .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -404,7 +414,9 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbContentsTitle)
                     .addComponent(kbContentsEditTitleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kbContentsCategoryLabel)
-                    .addComponent(kbContentsCategory))
+                    .addComponent(kbContentsCategory)
+                    .addComponent(kbContentsLastEditLabel)
+                    .addComponent(kbContentsLastEdit))
                 .addGap(4, 4, 4)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
@@ -632,8 +644,11 @@ public class MainWin extends javax.swing.JFrame {
             // get edited values
             currentKBEntry.setEntryTitle(kbContentsTitle.getText());
             currentKBEntry.setEntryBody(kbContentsTextArea.getText());
+            currentKBEntry.setEntryLastEdit(currentUser);
             // update DB entry
             DBHandler.updateObject(currentKBEntry);
+            // update last editor label
+            kbContentsLastEdit.setText(currentUserLabel.getText());
             // update items list as entry title might have changed
             kbIndexRefreshButtonActionPerformed(null);
             // clear unsaved changes gui markers
@@ -719,6 +734,7 @@ public class MainWin extends javax.swing.JFrame {
 
     private void kbContentsEditTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditTitleButtonActionPerformed
         if (currentUser>0) {
+            // show dialog that allows renaming
             // inspired by:
             // http://stackoverflow.com/a/790224
             JTextField entryTitle = new JTextField(currentKBEntry.getEntryTitle());
@@ -728,12 +744,21 @@ public class MainWin extends javax.swing.JFrame {
             };
             JOptionPane.showMessageDialog(null, inputs, "VSEGraf - editing", 
                     JOptionPane.PLAIN_MESSAGE);
-            //
+            // if entry name was changed
             if (!currentKBEntry.getEntryTitle().equals(entryTitle.getText())) {
-                currentKBEntry.setEntryTitle(entryTitle.getText());
-                kbContentsTitle.setText(entryTitle.getText());
-                // mark unsaved changes
-                markUnsavedChanges(true, true);
+                // check if name is unique among current entries
+                // TODO name must be unique within category
+                // TODO name must be uniquea among active versions (?)
+                if (DBHandler.countRows("FROM KBEntry WHERE title='" 
+                        + entryTitle.getText() + "'")<1) {
+                    currentKBEntry.setEntryTitle(entryTitle.getText());
+                    kbContentsTitle.setText(entryTitle.getText());
+                    // mark unsaved changes
+                    markUnsavedChanges(true, true);
+                } else {
+                    JOptionPane.showMessageDialog(instance, "Name not unique!", 
+                            "VSEGraf - metadata", JOptionPane.ERROR_MESSAGE);  
+                }
             }
         } else {
             throwNotLoggedInMessage();
@@ -849,6 +874,8 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JButton kbContentsDeleteButton;
     private javax.swing.JButton kbContentsEditButton;
     private javax.swing.JButton kbContentsEditTitleButton;
+    private javax.swing.JLabel kbContentsLastEdit;
+    private javax.swing.JLabel kbContentsLastEditLabel;
     private javax.swing.JButton kbContentsNewButton;
     private javax.swing.JButton kbContentsSaveButton;
     private javax.swing.JScrollPane kbContentsScrollPane;
@@ -913,12 +940,21 @@ public class MainWin extends javax.swing.JFrame {
                 String selectedItem = (String) kbList.getSelectedValue();
                 // load entry data from db
                 currentKBEntry = (KBEntry)DBHandler
-                        .getSingleObject("from KBEntry where entryTitle='" 
+                        .getSingleObject("FROM KBEntry WHERE entryTitle='" 
                                 + selectedItem + "'");
                 // fill gui elements with data
                 kbContentsTitle.setText(currentKBEntry.getEntryTitle());
                 kbContentsCategory.setText(currentKBEntry.getEntryCat());
                 kbContentsTextArea.setText(currentKBEntry.getEntryBody());
+                // last editor
+                DBUser lastEditor = (DBUser)DBHandler.getSingleObject(
+                        "FROM DBUser WHERE id='" 
+                                + currentKBEntry.getEntryLastEdit() + "'");
+                try {
+                    kbContentsLastEdit.setText(lastEditor.getUserName());
+                } catch (Exception ex) {
+                    kbContentsLastEdit.setText("UNKNOWN");
+                }
                 // clear unsaved changes gui markers
                 markUnsavedChanges(false, false);
              }
@@ -969,8 +1005,8 @@ public class MainWin extends javax.swing.JFrame {
 
     private void loginAction() {
         // TODO log input
-        JTextField userLogin = new JTextField();                                                  
-        JTextField userPass = new JTextField();                               
+        JTextField userLogin = new JTextField("xseca00"); //TODO delete                                                  
+        JPasswordField userPass = new JPasswordField("heslo");                               
         final JComponent[] inputs = new JComponent[] {
             new JLabel("Login:"),
             userLogin,

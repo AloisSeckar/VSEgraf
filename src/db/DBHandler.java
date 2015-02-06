@@ -3,7 +3,7 @@
 // @author Alois Seckar [ ellrohir@seznam.cz ]
 // @version 0.1
 //
-// Last modified: 2015-02-01 1658 GMT by Alois Seckar
+// Last modified: 2015-02-06 1930 GMT by Alois Seckar
 
 package db;
 
@@ -140,6 +140,18 @@ public class DBHandler {
             // TODO log error
             return "S_ERROR " + e.getMessage();
         }
+    }
+    
+    public static long countRows(String query) {
+        long count = 0;
+        try {
+            Session session = createSession();
+            session.getTransaction().begin();
+            count = (Long)session.createQuery("SELECT count(*) " + query).uniqueResult();
+        } catch (HibernateException e) {
+            // TODO log error
+        }
+        return count;
     }
 
     // ************************** \\
