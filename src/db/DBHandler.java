@@ -1,10 +1,3 @@
-// Hibernate DB handling methods for VSEGRAF project
-// 
-// @author Alois Seckar [ ellrohir@seznam.cz ]
-// @version 0.1
-//
-// Last modified: 2015-02-06 1930 GMT by Alois Seckar
-
 package db;
 
 import java.util.ArrayList;
@@ -18,10 +11,11 @@ import org.hibernate.cfg.Configuration;
 
 /**
  * DBHandler - provides bunch of static methods to handle the Hibernate
- * routines.
- *
- * @author Alois Seckar
- * @version 1.0
+ * routines for working with SQL database.
+ * 
+ * @author Alois Seckar [ ellrohir@seznam.cz ]
+ * @version 0.1
+ * @since 2015-02-13 14:50 GMT
  */
 public class DBHandler {
 

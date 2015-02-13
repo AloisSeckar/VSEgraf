@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!--
+ * Hibernate mapping file for "DBStats" class.
+ * 
+ * @author Alois Seckar [ ellrohir@seznam.cz ]
+ * @version 0.1
+ * @since 2015-02-13 16:04 GMT
+-->
+<hibernate-mapping package="db">
+  <class name="DBStats">
+    <id column="stats" name="statsKey" length="25" type="string">
+    </id> 
+    <property column="value" name="statsValue" type="int"/>
+  </class>
+</hibernate-mapping>

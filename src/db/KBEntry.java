@@ -1,13 +1,11 @@
-// edit: 2015-02-06 19:20
-// by:   AS
-
 package db;
 
 /**
- * KBEntry - Represents one "page" in knowledge base
+ * KBEntry - Represents one "page" in knowledge base.
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
+ * @since 2015-02-13 14:48 GMT
  */
 public class KBEntry {
 
@@ -25,6 +23,15 @@ public class KBEntry {
     private int kbID;
     
     /**
+     * Order of entry among all original entries in DB.
+     * For every "New" entry this number raises +1. For new versions of the
+     * same entry created by "Edit" the number remains the same.
+     * Current number of original entries is stored in "orig_entries" in 
+     * "DBStats" table.
+     */
+    private int kbOrigID;
+    
+    /**
      * Page title to be displayed.
      */
     private String entryTitle;
@@ -32,7 +39,7 @@ public class KBEntry {
     /**
      * Page category for listing.
      */
-    private String entryCat;
+    private int entryCat;
     
     /**
      * Page contents.
@@ -41,14 +48,15 @@ public class KBEntry {
     private String entryBody;
     
     /**
-     * DB ID of entry original author.
+     * DB ID of entry author.
      */
     private int entryAuthor;
     
     /**
-     * DB ID of entry last editor.
+     * Validity indicator.
+     * 1 - current version of entrz.
      */
-    private int entryLastEdit;
+    private int entryValid;
             
             
 
@@ -63,12 +71,14 @@ public class KBEntry {
     
     // standard constructor
     
-    public KBEntry(String eTitle, String eCat, String eBody, int eAuthor) {
+    public KBEntry(int origID, String eTitle, int eCat, String eBody, 
+            int eAuthor, int eValid) {
+        this.kbOrigID = origID;
         this.entryTitle = eTitle;
         this.entryCat = eCat;
         this.entryBody = eBody;
         this.entryAuthor = eAuthor;
-        this.entryLastEdit = eAuthor;
+        this.entryValid = eValid;
     }
 
     // ************************** \\
@@ -85,6 +95,14 @@ public class KBEntry {
         this.kbID = kbID;
     }
 
+    public int getKbOrigID() {
+        return kbOrigID;
+    }
+
+    public void setKbOrigID(int kbOrigID) {
+        this.kbOrigID = kbOrigID;
+    }
+
     public String getEntryTitle() {
         return entryTitle;
     }
@@ -93,11 +111,11 @@ public class KBEntry {
         this.entryTitle = entryTitle;
     }
 
-    public String getEntryCat() {
+    public int getEntryCat() {
         return entryCat;
     }
 
-    public void setEntryCat(String entryCat) {
+    public void setEntryCat(int entryCat) {
         this.entryCat = entryCat;
     }
 
@@ -117,14 +135,14 @@ public class KBEntry {
         this.entryAuthor = entryAuthor;
     }
 
-    public int getEntryLastEdit() {
-        return entryLastEdit;
+    public int getEntryValid() {
+        return entryValid;
     }
 
-    public void setEntryLastEdit(int entryLastEdit) {
-        this.entryLastEdit = entryLastEdit;
+    public void setEntryValid(int entryValid) {
+        this.entryValid = entryValid;
     }
-
+    
     // ************************** \\
     // *     PUBLIC METHODS     * \\
     // ************************** \\

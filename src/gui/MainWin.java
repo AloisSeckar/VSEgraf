@@ -1,15 +1,10 @@
-// Main GUI window for VSEGRAF project
-// 
-// @author Alois Seckar [ ellrohir@seznam.cz ]
-// @version 0.1
-//
-// Last modified: 2015-02-06 1835 GMT by Alois Seckar
-
 package gui;
 
 import db.DBHandler;
+import db.DBStats;
 import db.KBEntry;
 import db.DBUser;
+import db.KBCat;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
@@ -21,6 +16,7 @@ import java.io.File;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,8 +30,11 @@ import javax.swing.event.DocumentListener;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- *
- * @author Ellrohir
+ * Main GUI window for VSEGRAF project.
+ * 
+ * @author Alois Seckar [ ellrohir@seznam.cz ]
+ * @version 0.1
+ * @since 2015-02-13 15:50 GMT
  */
 public class MainWin extends javax.swing.JFrame {
     
@@ -44,6 +43,8 @@ public class MainWin extends javax.swing.JFrame {
     private KBEntry currentKBEntry;
     
     private int currentUser = 0;
+    
+    private int currentCat = 1;
 
     /**
      * Creates new form MainWin
@@ -82,10 +83,10 @@ public class MainWin extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         canvasArea = new javax.swing.JPanel();
         kbPanel = new javax.swing.JPanel();
+        kbCatLabel = new javax.swing.JLabel();
+        kbCatCBox = new javax.swing.JComboBox();
         kbIndexLabel = new javax.swing.JLabel();
         kbContentsTitle = new javax.swing.JLabel();
-        kbContentsCategoryLabel = new javax.swing.JLabel();
-        kbContentsCategory = new javax.swing.JLabel();
         kbContentsLastEditLabel = new javax.swing.JLabel();
         kbContentsLastEdit = new javax.swing.JLabel();
         kbContentsEditTitleButton = new javax.swing.JButton();
@@ -285,16 +286,21 @@ public class MainWin extends javax.swing.JFrame {
 
         mainPanel.addTab("Graph Canvas", canvasPanel);
 
+        kbCatLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        kbCatLabel.setText("Category");
+
+        kbCatCBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        kbCatCBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kbCatCBoxActionPerformed(evt);
+            }
+        });
+
         kbIndexLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         kbIndexLabel.setText("Index");
 
         kbContentsTitle.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         kbContentsTitle.setText("Page");
-
-        kbContentsCategoryLabel.setText("Category:");
-
-        kbContentsCategory.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        kbContentsCategory.setText("Cat");
 
         kbContentsLastEditLabel.setText("Last edit:");
 
@@ -375,7 +381,9 @@ public class MainWin extends javax.swing.JFrame {
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(kbIndexLabel)
                     .addComponent(kbIndexRefreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(kbIndexScrollPane))
+                    .addComponent(kbIndexScrollPane)
+                    .addComponent(kbCatLabel)
+                    .addComponent(kbCatCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kbPanelLayout.createSequentialGroup()
@@ -384,15 +392,10 @@ public class MainWin extends javax.swing.JFrame {
                                 .addComponent(kbContentsTitle)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsEditTitleButton)
-                                .addGap(116, 116, 116)
-                                .addComponent(kbContentsCategoryLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsCategory)
-                                .addGap(163, 163, 163)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(kbContentsLastEditLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsLastEdit)
-                                .addGap(0, 132, Short.MAX_VALUE))
+                                .addComponent(kbContentsLastEdit))
                             .addGroup(kbPanelLayout.createSequentialGroup()
                                 .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -401,7 +404,7 @@ public class MainWin extends javax.swing.JFrame {
                                 .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsDeleteButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
                                 .addComponent(kbContentsUnsavedMarker)))
                         .addContainerGap())
                     .addComponent(kbContentsScrollPane)))
@@ -410,17 +413,20 @@ public class MainWin extends javax.swing.JFrame {
             kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(kbPanelLayout.createSequentialGroup()
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(kbIndexLabel)
                     .addComponent(kbContentsTitle)
                     .addComponent(kbContentsEditTitleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(kbContentsCategoryLabel)
-                    .addComponent(kbContentsCategory)
                     .addComponent(kbContentsLastEditLabel)
-                    .addComponent(kbContentsLastEdit))
+                    .addComponent(kbContentsLastEdit)
+                    .addComponent(kbCatLabel))
                 .addGap(4, 4, 4)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                    .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE))
+                    .addGroup(kbPanelLayout.createSequentialGroup()
+                        .addComponent(kbCatCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbIndexLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kbIndexScrollPane))
+                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kbIndexRefreshButton)
@@ -620,14 +626,15 @@ public class MainWin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void kbIndexRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbIndexRefreshButtonActionPerformed
-        // GET ENTRIES FROM DB AND TURN THEM INTO LIST
+        // GET ENTRIES FROM DB AND TURN THEM INTO LIST 
         DefaultListModel listModel = new DefaultListModel();
-        Iterator itr = DBHandler.getListOfObjects("from KBEntry");
+        Iterator itr = DBHandler.getListOfObjects("FROM KBEntry WHERE valid='1'"
+                + " AND cat='" + currentCat + "'");
         while (itr.hasNext()) {
             KBEntry current = (KBEntry)itr.next();
-            // TODO implement listing by categories
             listModel.addElement(current.getEntryTitle());
         }
+        // SET THIS LIST FOR INDEX OF ENTRIES
         kbList.setModel(listModel);
     }//GEN-LAST:event_kbIndexRefreshButtonActionPerformed
 
@@ -641,16 +648,20 @@ public class MainWin extends javax.swing.JFrame {
 
     private void kbContentsSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsSaveButtonActionPerformed
         if (currentUser>0) {
-            // get edited values
-            currentKBEntry.setEntryTitle(kbContentsTitle.getText());
-            currentKBEntry.setEntryBody(kbContentsTextArea.getText());
-            currentKBEntry.setEntryLastEdit(currentUser);
-            // update DB entry
+            // HANDLE DB CHANGES
+            // set new entry and save it into db
+            KBEntry newEntry = new KBEntry(currentKBEntry.getKbOrigID(), 
+                    kbContentsTitle.getText(), currentKBEntry.getEntryCat(), 
+                    kbContentsTextArea.getText(), currentUser, 1);
+            DBHandler.saveObject(newEntry);
+            // make currently edited entry version invalid
+            currentKBEntry.setEntryValid(0);
             DBHandler.updateObject(currentKBEntry);
-            // update last editor label
-            kbContentsLastEdit.setText(currentUserLabel.getText());
+            // HANDLE GUI CHANGES
             // update items list as entry title might have changed
             kbIndexRefreshButtonActionPerformed(null);
+            // update last editor label
+            kbContentsLastEdit.setText(currentUserLabel.getText());
             // clear unsaved changes gui markers
             markUnsavedChanges(false, false);
         } else {
@@ -750,8 +761,10 @@ public class MainWin extends javax.swing.JFrame {
                 // TODO name must be unique within category
                 // TODO name must be uniquea among active versions (?)
                 if (DBHandler.countRows("FROM KBEntry WHERE title='" 
-                        + entryTitle.getText() + "'")<1) {
-                    currentKBEntry.setEntryTitle(entryTitle.getText());
+                      + entryTitle.getText() + "' AND valid='1' AND orig_id<>'" 
+                        + currentKBEntry.getKbOrigID() + "'")<1) {
+//                    // do NOT change the object itself yet!
+//                    currentKBEntry.setEntryTitle(entryTitle.getText());
                     kbContentsTitle.setText(entryTitle.getText());
                     // mark unsaved changes
                     markUnsavedChanges(true, true);
@@ -767,13 +780,18 @@ public class MainWin extends javax.swing.JFrame {
 
     private void kbContentsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsNewButtonActionPerformed
         if (currentUser>0) {
+            // construct new orig_id for brand new db entry
+            DBStats origEntries = (DBStats)DBHandler.getSingleObject(
+                        "FROM DBStats WHERE key='orig_entries'");
+            int newID = origEntries.getStatsValue() + 1;
+            origEntries.setStatsValue(newID);
+            DBHandler.updateObject(origEntries); // save new value for future
             // create plain new entry and save it to db
-            currentKBEntry = new KBEntry("New entry", "General", 
-                    "Start typing contents...", currentUser);
+            currentKBEntry = new KBEntry(newID, "New entry", currentCat, 
+                    "Start typing contents...", currentUser, 1);
             DBHandler.saveObject(currentKBEntry);
             // update gui elements with new values
             kbContentsTitle.setText(currentKBEntry.getEntryTitle());
-            kbContentsCategory.setText(currentKBEntry.getEntryCat());
             kbContentsTextArea.setText(currentKBEntry.getEntryBody());
             // clear unsaved changes gui markers (initial entry was saved)
             markUnsavedChanges(false, false);
@@ -799,7 +817,6 @@ public class MainWin extends javax.swing.JFrame {
                 kbList.setSelectedIndex(0);
                 // clear gui
                 kbContentsTitle.setText("Deleted");
-                kbContentsCategory.setText("-");
                 kbContentsTextArea.setText("Entry just deleted...");
                 // clear unsaved changes gui markers
                 markUnsavedChanges(false, false);
@@ -848,6 +865,16 @@ public class MainWin extends javax.swing.JFrame {
         notImplemeted();
     }//GEN-LAST:event_changePassMenuItemActionPerformed
 
+    private void kbCatCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbCatCBoxActionPerformed
+        // get selected KBCat id
+        KBCat entryCat = (KBCat)DBHandler.getSingleObject("FROM KBCat WHERE "
+                + "name='" + kbCatCBox.getSelectedItem().toString() + "'");
+        // set selected KBCat id
+        currentCat = entryCat.getCatID();
+        // reload entries in category
+        kbIndexRefreshButtonActionPerformed(evt);
+    }//GEN-LAST:event_kbCatCBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel canvasArea;
@@ -869,8 +896,8 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
-    private javax.swing.JLabel kbContentsCategory;
-    private javax.swing.JLabel kbContentsCategoryLabel;
+    private javax.swing.JComboBox kbCatCBox;
+    private javax.swing.JLabel kbCatLabel;
     private javax.swing.JButton kbContentsDeleteButton;
     private javax.swing.JButton kbContentsEditButton;
     private javax.swing.JButton kbContentsEditTitleButton;
@@ -944,12 +971,11 @@ public class MainWin extends javax.swing.JFrame {
                                 + selectedItem + "'");
                 // fill gui elements with data
                 kbContentsTitle.setText(currentKBEntry.getEntryTitle());
-                kbContentsCategory.setText(currentKBEntry.getEntryCat());
                 kbContentsTextArea.setText(currentKBEntry.getEntryBody());
-                // last editor
+                // last editor (enrty author)
                 DBUser lastEditor = (DBUser)DBHandler.getSingleObject(
                         "FROM DBUser WHERE id='" 
-                                + currentKBEntry.getEntryLastEdit() + "'");
+                                + currentKBEntry.getEntryAuthor()+ "'");
                 try {
                     kbContentsLastEdit.setText(lastEditor.getUserName());
                 } catch (Exception ex) {
@@ -980,6 +1006,17 @@ public class MainWin extends javax.swing.JFrame {
                 }
             }
         );
+        
+        // fill categories combo box
+        // GET ENTRIES FROM DB AND TURN THEM INTO LIST 
+        DefaultComboBoxModel listModel = new DefaultComboBoxModel();
+        Iterator itr = DBHandler.getListOfObjects("FROM KBCat ORDER BY ord");
+        while (itr.hasNext()) {
+            KBCat current = (KBCat)itr.next();
+            listModel.addElement(current.getCatName());
+        }
+        // SET THIS LIST FOR INDEX OF ENTRIES
+        kbCatCBox.setModel(listModel);
         
         // refresh knowledge base list
         kbIndexRefreshButtonActionPerformed(null);

@@ -1,13 +1,11 @@
-// edit: 2015-02-06 16:20
-// by:   AS
-
 package db;
 
 /**
- * DBUser - Represents one "user" in database.
+ * DBUser - Represents one "user" in knowledge base.
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
+ * @since 2015-02-13 14:50 GMT
  */
 public class DBUser {
 
