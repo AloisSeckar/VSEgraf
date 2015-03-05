@@ -5,7 +5,7 @@
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-02-13 14:49 GMT
+ * @since 2015-03-15 19:12 GMT
 -->
 <hibernate-mapping package="db">
   <class name="DBUser">
@@ -14,6 +14,7 @@
     </id>
     <property column="xname" length="7" name="userLogin" type="string"/>
     <property column="pass" length="40" name="userPass" type="string"/>
+    <property column="level" name="userLevel" type="int"/>
     <property column="name" length="50" name="userName" type="string"/>
   </class>
 </hibernate-mapping>

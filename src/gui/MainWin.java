@@ -34,15 +34,18 @@ import org.apache.commons.codec.digest.DigestUtils;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-02-13 15:50 GMT
+ * @since 2015-03-15 19:49 GMT
  */
 public class MainWin extends javax.swing.JFrame {
+    
+    private static final int USER_MOD = 2;
+    private static final int USER_ADMIN = 3;
     
     private static final MainWin instance = new MainWin();
     
     private KBEntry currentKBEntry;
     
-    private int currentUser = 0;
+    private DBUser currentUser = null;
     
     private int currentCat = 1;
 
@@ -84,21 +87,24 @@ public class MainWin extends javax.swing.JFrame {
         canvasArea = new javax.swing.JPanel();
         kbPanel = new javax.swing.JPanel();
         kbCatLabel = new javax.swing.JLabel();
+        kbContentsTitle = new javax.swing.JLabel();
+        kbContentsEditTitleButton = new javax.swing.JButton();
+        kbContentsLastEdit = new javax.swing.JLabel();
+        kbContentsLastEditLabel = new javax.swing.JLabel();
         kbCatCBox = new javax.swing.JComboBox();
         kbIndexLabel = new javax.swing.JLabel();
-        kbContentsTitle = new javax.swing.JLabel();
-        kbContentsLastEditLabel = new javax.swing.JLabel();
-        kbContentsLastEdit = new javax.swing.JLabel();
-        kbContentsEditTitleButton = new javax.swing.JButton();
         kbIndexScrollPane = new javax.swing.JScrollPane();
         kbList = new javax.swing.JList();
         kbContentsScrollPane = new javax.swing.JScrollPane();
         kbContentsTextArea = new javax.swing.JTextArea();
         kbIndexRefreshButton = new javax.swing.JButton();
         kbContentsEditButton = new javax.swing.JButton();
-        kbContentsSaveButton = new javax.swing.JButton();
         kbContentsNewButton = new javax.swing.JButton();
+        kbContentsSaveButton = new javax.swing.JButton();
         kbContentsDeleteButton = new javax.swing.JButton();
+        kbContentsVersionsButton = new javax.swing.JButton();
+        kbContentsCategoriesButton = new javax.swing.JButton();
+        kbContentsUsersButton = new javax.swing.JButton();
         kbContentsUnsavedMarker = new javax.swing.JLabel();
         statusPanel = new javax.swing.JPanel();
         currentUserLabel = new javax.swing.JLabel();
@@ -277,35 +283,23 @@ public class MainWin extends javax.swing.JFrame {
         canvasPanel.setLayout(canvasPanelLayout);
         canvasPanelLayout.setHorizontalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE)
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
         );
 
         mainPanel.addTab("Graph Canvas", canvasPanel);
 
         kbCatLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         kbCatLabel.setText("Category");
-
-        kbCatCBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        kbCatCBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kbCatCBoxActionPerformed(evt);
-            }
-        });
-
-        kbIndexLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        kbIndexLabel.setText("Index");
+        kbCatLabel.setMaximumSize(new java.awt.Dimension(80, 14));
+        kbCatLabel.setMinimumSize(new java.awt.Dimension(80, 14));
+        kbCatLabel.setPreferredSize(new java.awt.Dimension(80, 14));
 
         kbContentsTitle.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         kbContentsTitle.setText("Page");
-
-        kbContentsLastEditLabel.setText("Last edit:");
-
-        kbContentsLastEdit.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        kbContentsLastEdit.setText("Name");
 
         kbContentsEditTitleButton.setText("Edit");
         kbContentsEditTitleButton.setEnabled(false);
@@ -315,11 +309,32 @@ public class MainWin extends javax.swing.JFrame {
             }
         });
 
+        kbContentsLastEdit.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        kbContentsLastEdit.setText("Name");
+
+        kbContentsLastEditLabel.setText("Last edit:");
+
+        kbCatCBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        kbCatCBox.setMaximumSize(new java.awt.Dimension(80, 23));
+        kbCatCBox.setMinimumSize(new java.awt.Dimension(80, 23));
+        kbCatCBox.setPreferredSize(new java.awt.Dimension(80, 23));
+        kbCatCBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kbCatCBoxActionPerformed(evt);
+            }
+        });
+
+        kbIndexLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        kbIndexLabel.setText("Index");
+
         kbList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Index" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        kbList.setMaximumSize(new java.awt.Dimension(80, 23));
+        kbList.setMinimumSize(new java.awt.Dimension(80, 23));
+        kbList.setPreferredSize(new java.awt.Dimension(80, 23));
         kbIndexScrollPane.setViewportView(kbList);
 
         kbContentsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -334,6 +349,9 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsScrollPane.setViewportView(kbContentsTextArea);
 
         kbIndexRefreshButton.setText("Refresh");
+        kbIndexRefreshButton.setMaximumSize(new java.awt.Dimension(80, 23));
+        kbIndexRefreshButton.setMinimumSize(new java.awt.Dimension(80, 23));
+        kbIndexRefreshButton.setPreferredSize(new java.awt.Dimension(80, 23));
         kbIndexRefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbIndexRefreshButtonActionPerformed(evt);
@@ -341,31 +359,70 @@ public class MainWin extends javax.swing.JFrame {
         });
 
         kbContentsEditButton.setText("Edit");
+        kbContentsEditButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsEditButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsEditButton.setPreferredSize(new java.awt.Dimension(85, 23));
         kbContentsEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbContentsEditButtonActionPerformed(evt);
             }
         });
 
-        kbContentsSaveButton.setText("Save");
-        kbContentsSaveButton.setEnabled(false);
-        kbContentsSaveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kbContentsSaveButtonActionPerformed(evt);
-            }
-        });
-
         kbContentsNewButton.setText("New");
+        kbContentsNewButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsNewButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsNewButton.setPreferredSize(new java.awt.Dimension(85, 23));
         kbContentsNewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbContentsNewButtonActionPerformed(evt);
             }
         });
 
+        kbContentsSaveButton.setText("Save");
+        kbContentsSaveButton.setEnabled(false);
+        kbContentsSaveButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsSaveButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsSaveButton.setPreferredSize(new java.awt.Dimension(85, 23));
+        kbContentsSaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kbContentsSaveButtonActionPerformed(evt);
+            }
+        });
+
         kbContentsDeleteButton.setText("Delete");
+        kbContentsDeleteButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsDeleteButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsDeleteButton.setPreferredSize(new java.awt.Dimension(85, 23));
         kbContentsDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbContentsDeleteButtonActionPerformed(evt);
+            }
+        });
+
+        kbContentsVersionsButton.setText("Versions");
+        kbContentsVersionsButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsVersionsButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsVersionsButton.setPreferredSize(new java.awt.Dimension(85, 23));
+        kbContentsVersionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kbContentsVersionsButtonActionPerformed(evt);
+            }
+        });
+
+        kbContentsCategoriesButton.setText("Categories");
+        kbContentsCategoriesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kbContentsCategoriesButtonActionPerformed(evt);
+            }
+        });
+
+        kbContentsUsersButton.setText("Users");
+        kbContentsUsersButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsUsersButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsUsersButton.setPreferredSize(new java.awt.Dimension(85, 23));
+        kbContentsUsersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kbContentsUsersButtonActionPerformed(evt);
             }
         });
 
@@ -378,36 +435,43 @@ public class MainWin extends javax.swing.JFrame {
             kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(kbPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(kbCatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbCatCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kbIndexLabel)
-                    .addComponent(kbIndexRefreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(kbIndexScrollPane)
-                    .addComponent(kbCatLabel)
-                    .addComponent(kbCatCBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbIndexRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kbPanelLayout.createSequentialGroup()
                         .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(kbContentsTitle)
+                            .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(kbPanelLayout.createSequentialGroup()
-                                .addComponent(kbContentsTitle)
+                                .addGap(6, 6, 6)
+                                .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsVersionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsCategoriesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(kbContentsUsersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                                .addComponent(kbContentsUnsavedMarker))
+                            .addGroup(kbPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsEditTitleButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(kbContentsLastEditLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsLastEdit))
-                            .addGroup(kbPanelLayout.createSequentialGroup()
-                                .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsDeleteButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
-                                .addComponent(kbContentsUnsavedMarker)))
-                        .addContainerGap())
-                    .addComponent(kbContentsScrollPane)))
+                                .addComponent(kbContentsLastEdit))))
+                    .addComponent(kbContentsScrollPane))
+                .addContainerGap())
         );
         kbPanelLayout.setVerticalGroup(
             kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,7 +481,7 @@ public class MainWin extends javax.swing.JFrame {
                     .addComponent(kbContentsEditTitleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kbContentsLastEditLabel)
                     .addComponent(kbContentsLastEdit)
-                    .addComponent(kbCatLabel))
+                    .addComponent(kbCatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kbPanelLayout.createSequentialGroup()
@@ -425,17 +489,20 @@ public class MainWin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(kbIndexLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbIndexScrollPane))
-                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                        .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(kbIndexRefreshButton)
-                    .addComponent(kbContentsEditButton)
-                    .addComponent(kbContentsSaveButton)
-                    .addComponent(kbContentsNewButton)
-                    .addComponent(kbContentsDeleteButton)
-                    .addComponent(kbContentsUnsavedMarker))
-                .addContainerGap())
+                    .addComponent(kbContentsUnsavedMarker)
+                    .addComponent(kbContentsUsersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsCategoriesButton)
+                    .addComponent(kbIndexRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsVersionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
         );
 
         mainPanel.addTab("Knowledge Base", kbPanel);
@@ -451,7 +518,7 @@ public class MainWin extends javax.swing.JFrame {
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusPanelLayout.createSequentialGroup()
-                .addContainerGap(863, Short.MAX_VALUE)
+                .addContainerGap(962, Short.MAX_VALUE)
                 .addComponent(currentUserLabel)
                 .addContainerGap())
         );
@@ -639,7 +706,7 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbIndexRefreshButtonActionPerformed
 
     private void kbContentsEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditButtonActionPerformed
-        if (currentUser>0) {
+        if (currentUser!=null) {
             allowKBEdit(!kbContentsSaveButton.isEnabled());
         } else {
             throwNotLoggedInMessage();
@@ -647,12 +714,12 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbContentsEditButtonActionPerformed
 
     private void kbContentsSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsSaveButtonActionPerformed
-        if (currentUser>0) {
+        if (currentUser!=null) {
             // HANDLE DB CHANGES
             // set new entry and save it into db
             KBEntry newEntry = new KBEntry(currentKBEntry.getKbOrigID(), 
                     kbContentsTitle.getText(), currentKBEntry.getEntryCat(), 
-                    kbContentsTextArea.getText(), currentUser, 1);
+                    kbContentsTextArea.getText(), currentUser.getUserID(), 1);
             DBHandler.saveObject(newEntry);
             // make currently edited entry version invalid
             currentKBEntry.setEntryValid(0);
@@ -744,7 +811,7 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_paletteCategorySelectActionPerformed
 
     private void kbContentsEditTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditTitleButtonActionPerformed
-        if (currentUser>0) {
+        if (currentUser!=null) {
             // show dialog that allows renaming
             // inspired by:
             // http://stackoverflow.com/a/790224
@@ -779,7 +846,7 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbContentsEditTitleButtonActionPerformed
 
     private void kbContentsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsNewButtonActionPerformed
-        if (currentUser>0) {
+        if (currentUser!=null) {
             // construct new orig_id for brand new db entry
             DBStats origEntries = (DBStats)DBHandler.getSingleObject(
                         "FROM DBStats WHERE key='orig_entries'");
@@ -788,7 +855,7 @@ public class MainWin extends javax.swing.JFrame {
             DBHandler.updateObject(origEntries); // save new value for future
             // create plain new entry and save it to db
             currentKBEntry = new KBEntry(newID, "New entry", currentCat, 
-                    "Start typing contents...", currentUser, 1);
+                    "Start typing contents...", currentUser.getUserID(), 1);
             DBHandler.saveObject(currentKBEntry);
             // update gui elements with new values
             kbContentsTitle.setText(currentKBEntry.getEntryTitle());
@@ -808,7 +875,7 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbContentsNewButtonActionPerformed
 
     private void kbContentsDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsDeleteButtonActionPerformed
-        if (currentUser>0) {
+        if (currentUser!=null) {
             if (showQuestionDialog("Do you really want to delete this?")==0) {
                 // delete item itself
                 DBHandler.deleteObject(currentKBEntry);
@@ -875,6 +942,18 @@ public class MainWin extends javax.swing.JFrame {
         kbIndexRefreshButtonActionPerformed(evt);
     }//GEN-LAST:event_kbCatCBoxActionPerformed
 
+    private void kbContentsVersionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsVersionsButtonActionPerformed
+        notImplemeted();
+    }//GEN-LAST:event_kbContentsVersionsButtonActionPerformed
+
+    private void kbContentsCategoriesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsCategoriesButtonActionPerformed
+        notImplemeted();
+    }//GEN-LAST:event_kbContentsCategoriesButtonActionPerformed
+
+    private void kbContentsUsersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsUsersButtonActionPerformed
+        notImplemeted();
+    }//GEN-LAST:event_kbContentsUsersButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel canvasArea;
@@ -898,6 +977,7 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JComboBox kbCatCBox;
     private javax.swing.JLabel kbCatLabel;
+    private javax.swing.JButton kbContentsCategoriesButton;
     private javax.swing.JButton kbContentsDeleteButton;
     private javax.swing.JButton kbContentsEditButton;
     private javax.swing.JButton kbContentsEditTitleButton;
@@ -909,6 +989,8 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JTextArea kbContentsTextArea;
     private javax.swing.JLabel kbContentsTitle;
     private javax.swing.JLabel kbContentsUnsavedMarker;
+    private javax.swing.JButton kbContentsUsersButton;
+    private javax.swing.JButton kbContentsVersionsButton;
     private javax.swing.JMenuItem kbEntryMenuItem;
     private javax.swing.JLabel kbIndexLabel;
     private javax.swing.JButton kbIndexRefreshButton;
@@ -1068,7 +1150,7 @@ public class MainWin extends javax.swing.JFrame {
             // compare
             if (user.getUserPass().equals(hPass)) {
                 // process login
-                currentUser = user.getUserID();
+                currentUser = user;
                 // show kb entry inputs and related menu options
                 showKBEditingTools(true);
                 allowLoginMenuOptions(true);
@@ -1099,7 +1181,7 @@ public class MainWin extends javax.swing.JFrame {
 
     private void logoutAction() {
         // process logout
-        currentUser = 0;
+        currentUser = null;
         // hide kb entry inputs and related menu options
         showKBEditingTools(false);
         allowLoginMenuOptions(false);
@@ -1156,5 +1238,24 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsSaveButton.setVisible(show);
         kbContentsNewButton.setVisible(show);
         kbContentsDeleteButton.setVisible(show);
+        // get current user level
+        int level = 0;
+        if (currentUser!=null) {
+            level = currentUser.getUserLevel();
+        }
+        // some options are only visible for mods
+        if (level>=USER_MOD) {
+            kbContentsVersionsButton.setVisible(show);
+        } else {
+            kbContentsVersionsButton.setVisible(false);
+        }
+        // some options are only visible for admins
+        if (level>=USER_ADMIN) {
+            kbContentsCategoriesButton.setVisible(show);
+            kbContentsUsersButton.setVisible(show);
+        } else {
+            kbContentsCategoriesButton.setVisible(false);
+            kbContentsUsersButton.setVisible(false);
+        }
     }
 }

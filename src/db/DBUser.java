@@ -5,7 +5,7 @@ package db;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-02-13 14:50 GMT
+ * @since 2015-03-15 19:13 GMT
  */
 public class DBUser {
 
@@ -35,6 +35,12 @@ public class DBUser {
     private String userPass;
     
     /**
+     * DBUser level.
+     * The bigger level, the more privileges user has.
+     */
+    private int userLevel;
+    
+    /**
      * DBUser display name.
      * Name to be displayed within program.
      */
@@ -53,9 +59,10 @@ public class DBUser {
     
     // standard constructor
     
-    public DBUser(String uLogin, String uPass, String uName) {
+    public DBUser(String uLogin, String uPass, int uLevel, String uName) {
         this.userLogin = uLogin;
         this.userPass = uPass;
+        this.userLevel = uLevel;
         this.userName = uName;
     }
 
@@ -87,6 +94,14 @@ public class DBUser {
 
     public void setUserPass(String userPass) {
         this.userPass = userPass;
+    }
+
+    public int getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(int userLevel) {
+        this.userLevel = userLevel;
     }
 
     public String getUserName() {
