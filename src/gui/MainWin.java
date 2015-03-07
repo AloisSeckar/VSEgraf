@@ -27,39 +27,62 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.apache.commons.codec.digest.DigestUtils;
+import logic.ConfigConstants;
+import logic.user.LoginHandler;
 
 /**
  * Main GUI window for VSEGRAF project.
- * 
+ *
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-15 19:49 GMT
+ * @since 2015-03-07 10:57 GMT
  */
 public class MainWin extends javax.swing.JFrame {
     
-    private static final int USER_MOD = 2;
-    private static final int USER_ADMIN = 3;
-    
-    private static final MainWin instance = new MainWin();
-    
-    private KBEntry currentKBEntry;
-    
-    private DBUser currentUser = null;
-    
-    private int currentCat = 1;
+    // ************************** \\
+    // *        CONSTANTS       * \\
+    // ************************** \\
+
+    // ************************** \\
+    // *       PROPERTIES       * \\
+    // ************************** \\
 
     /**
-     * Creates new form MainWin
+     * The only working instance of GUI MainWin.
+     * Singleton pattern implementation.
+     */
+    private static final MainWin instance = new MainWin();
+
+    /**
+     * Information about current user.
+     */
+    private final LoginHandler currentLogin = new LoginHandler();
+
+    /**
+     * Information about currently browsed KB page.
+     */
+    private KBEntry currentKBEntry;
+
+    /**
+     * Information about currenlty viewed KB category.
+     */
+    private int currentCat = 1;
+    
+    // ************************** \\
+    // *      CONSTRUCTORS      * \\
+    // ************************** \\
+
+    /**
+     * Creates new GUI MainWin.
      */
     private MainWin() {
         initComponents();
         finalizeComponents();
     }
     
-    public static MainWin getInstance() {
-        return instance;
-    }
+    // **************************** \\
+    // * AUTOGEN NETBEANS METHODS * \\
+    // **************************** \\
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -187,7 +210,7 @@ public class MainWin extends javax.swing.JFrame {
                 .addComponent(paletteCategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paletteElementsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         metadataPanel.setBackground(new java.awt.Color(153, 102, 255));
@@ -693,33 +716,24 @@ public class MainWin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void kbIndexRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbIndexRefreshButtonActionPerformed
-        // GET ENTRIES FROM DB AND TURN THEM INTO LIST 
-        DefaultListModel listModel = new DefaultListModel();
-        Iterator itr = DBHandler.getListOfObjects("FROM KBEntry WHERE valid='1'"
-                + " AND cat='" + currentCat + "'");
-        while (itr.hasNext()) {
-            KBEntry current = (KBEntry)itr.next();
-            listModel.addElement(current.getEntryTitle());
-        }
-        // SET THIS LIST FOR INDEX OF ENTRIES
-        kbList.setModel(listModel);
+        getListOfKBEntries();
     }//GEN-LAST:event_kbIndexRefreshButtonActionPerformed
 
     private void kbContentsEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditButtonActionPerformed
-        if (currentUser!=null) {
+        if (currentLogin.isLoggedIn()) {
             allowKBEdit(!kbContentsSaveButton.isEnabled());
         } else {
-            throwNotLoggedInMessage();
+            GUIAux.throwNotLoggedInMessage(instance);
         }
     }//GEN-LAST:event_kbContentsEditButtonActionPerformed
 
     private void kbContentsSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsSaveButtonActionPerformed
-        if (currentUser!=null) {
+        if (currentLogin.isLoggedIn()) {
             // HANDLE DB CHANGES
             // set new entry and save it into db
-            KBEntry newEntry = new KBEntry(currentKBEntry.getKbOrigID(), 
-                    kbContentsTitle.getText(), currentKBEntry.getEntryCat(), 
-                    kbContentsTextArea.getText(), currentUser.getUserID(), 1);
+            KBEntry newEntry = new KBEntry(currentKBEntry.getKbOrigID(),
+                    kbContentsTitle.getText(), currentKBEntry.getEntryCat(),
+                    kbContentsTextArea.getText(), currentLogin.getUserID(), 1);
             DBHandler.saveObject(newEntry);
             // make currently edited entry version invalid
             currentKBEntry.setEntryValid(0);
@@ -732,7 +746,7 @@ public class MainWin extends javax.swing.JFrame {
             // clear unsaved changes gui markers
             markUnsavedChanges(false, false);
         } else {
-            throwNotLoggedInMessage();
+            GUIAux.throwNotLoggedInMessage(instance);
         }
     }//GEN-LAST:event_kbContentsSaveButtonActionPerformed
 
@@ -742,31 +756,31 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void newGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGraphMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_newGraphMenuItemActionPerformed
 
     private void loadGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGraphMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_loadGraphMenuItemActionPerformed
 
     private void saveGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGraphMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_saveGraphMenuItemActionPerformed
 
     private void exportPNGMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPNGMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_exportPNGMenuItemActionPerformed
 
     private void exportPDFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPDFMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_exportPDFMenuItemActionPerformed
 
     private void exportXMLMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportXMLMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_exportXMLMenuItemActionPerformed
 
     private void exportTXTMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportTXTMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_exportTXTMenuItemActionPerformed
 
     private void metadataMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metadataMenuItemActionPerformed
@@ -774,18 +788,18 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_metadataMenuItemActionPerformed
 
     private void kbEntryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbEntryMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_kbEntryMenuItemActionPerformed
 
     private void preferencesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_preferencesMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         JOptionPane.showMessageDialog(instance, "VSEGraf\n"
                 + "Simple Java graph designing tool for educational purposes\n\n"
                 + "Authors: Alois Seckar, Tomas Skalicky\n\n"
-                + "© 2015", 
+                + "© 2015",
                 "VSEGraf", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
@@ -811,51 +825,51 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_paletteCategorySelectActionPerformed
 
     private void kbContentsEditTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditTitleButtonActionPerformed
-        if (currentUser!=null) {
+        if (currentLogin.isLoggedIn()) {
             // show dialog that allows renaming
             // inspired by:
             // http://stackoverflow.com/a/790224
             JTextField entryTitle = new JTextField(currentKBEntry.getEntryTitle());
-            final JComponent[] inputs = new JComponent[] {
+            final JComponent[] inputs = new JComponent[]{
                 new JLabel("Set title:"),
                 entryTitle
             };
-            JOptionPane.showMessageDialog(null, inputs, "VSEGraf - editing", 
+            JOptionPane.showMessageDialog(null, inputs, "VSEGraf - editing",
                     JOptionPane.PLAIN_MESSAGE);
             // if entry name was changed
             if (!currentKBEntry.getEntryTitle().equals(entryTitle.getText())) {
                 // check if name is unique among current entries
                 // TODO name must be unique within category
                 // TODO name must be uniquea among active versions (?)
-                if (DBHandler.countRows("FROM KBEntry WHERE title='" 
-                      + entryTitle.getText() + "' AND valid='1' AND orig_id<>'" 
-                        + currentKBEntry.getKbOrigID() + "'")<1) {
+                if (DBHandler.countRows("FROM KBEntry WHERE title='"
+                        + entryTitle.getText() + "' AND valid='1' AND orig_id<>'"
+                        + currentKBEntry.getKbOrigID() + "'") < 1) {
 //                    // do NOT change the object itself yet!
 //                    currentKBEntry.setEntryTitle(entryTitle.getText());
                     kbContentsTitle.setText(entryTitle.getText());
                     // mark unsaved changes
                     markUnsavedChanges(true, true);
                 } else {
-                    JOptionPane.showMessageDialog(instance, "Name not unique!", 
-                            "VSEGraf - metadata", JOptionPane.ERROR_MESSAGE);  
+                    JOptionPane.showMessageDialog(instance, "Name not unique!",
+                            "VSEGraf - metadata", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            throwNotLoggedInMessage();
+            GUIAux.throwNotLoggedInMessage(instance);
         }
     }//GEN-LAST:event_kbContentsEditTitleButtonActionPerformed
 
     private void kbContentsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsNewButtonActionPerformed
-        if (currentUser!=null) {
+        if (currentLogin.isLoggedIn()) {
             // construct new orig_id for brand new db entry
-            DBStats origEntries = (DBStats)DBHandler.getSingleObject(
-                        "FROM DBStats WHERE key='orig_entries'");
+            DBStats origEntries = (DBStats) DBHandler.getSingleObject(
+                    "FROM DBStats WHERE key='orig_entries'");
             int newID = origEntries.getStatsValue() + 1;
             origEntries.setStatsValue(newID);
             DBHandler.updateObject(origEntries); // save new value for future
             // create plain new entry and save it to db
-            currentKBEntry = new KBEntry(newID, "New entry", currentCat, 
-                    "Start typing contents...", currentUser.getUserID(), 1);
+            currentKBEntry = new KBEntry(newID, "New entry", currentCat,
+                    "Start typing contents...", currentLogin.getUserID(), 1);
             DBHandler.saveObject(currentKBEntry);
             // update gui elements with new values
             kbContentsTitle.setText(currentKBEntry.getEntryTitle());
@@ -864,19 +878,20 @@ public class MainWin extends javax.swing.JFrame {
             markUnsavedChanges(false, false);
             // update items list
             kbIndexRefreshButtonActionPerformed(null);
-            kbList.setSelectedIndex(kbList.getModel().getSize()-1);
+            kbList.setSelectedIndex(kbList.getModel().getSize() - 1);
             // allow editing if not enabled yet
             if (!kbContentsSaveButton.isEnabled()) {
                 kbContentsEditButtonActionPerformed(evt);
             }
         } else {
-            throwNotLoggedInMessage();
+            GUIAux.throwNotLoggedInMessage(instance);
         }
     }//GEN-LAST:event_kbContentsNewButtonActionPerformed
 
     private void kbContentsDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsDeleteButtonActionPerformed
-        if (currentUser!=null) {
-            if (showQuestionDialog("Do you really want to delete this?")==0) {
+        if (currentLogin.isLoggedIn()) {
+            if (GUIAux.showQuestionDialog(instance, 
+                    "Do you really want to delete this?") == 0) {
                 // delete item itself
                 DBHandler.deleteObject(currentKBEntry);
                 // refresh item list
@@ -892,15 +907,15 @@ public class MainWin extends javax.swing.JFrame {
                 allowKBEdit(false);
             }
         } else {
-            throwNotLoggedInMessage();
+            GUIAux.throwNotLoggedInMessage(instance);
         }
     }//GEN-LAST:event_kbContentsDeleteButtonActionPerformed
 
     private void metadataChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metadataChangeButtonActionPerformed
-        JTextField metaName = new JTextField(metadataLabelName.getText());                                                  
-        JTextField metaType = new JTextField(metadataLabelType.getText());                                                  
+        JTextField metaName = new JTextField(metadataLabelName.getText());
+        JTextField metaType = new JTextField(metadataLabelType.getText());
         JTextField metaAuthor = new JTextField(metadataLabelAuthor.getText());
-        final JComponent[] inputs = new JComponent[] {
+        final JComponent[] inputs = new JComponent[]{
             new JLabel("Set graph name:"),
             metaName,
             new JLabel("Set graph type:"),
@@ -908,12 +923,12 @@ public class MainWin extends javax.swing.JFrame {
             new JLabel("Set graph author:"),
             metaAuthor
         };
-        JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - metadata", 
+        JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - metadata",
                 JOptionPane.PLAIN_MESSAGE);
         //
-        metadataLabelName.setText(metaName.getText()); 
-        metadataLabelType.setText(metaType.getText());  
-        metadataLabelAuthor.setText(metaAuthor.getText());  
+        metadataLabelName.setText(metaName.getText());
+        metadataLabelType.setText(metaType.getText());
+        metadataLabelAuthor.setText(metaAuthor.getText());
     }//GEN-LAST:event_metadataChangeButtonActionPerformed
 
     private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed
@@ -925,16 +940,16 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMenuItemActionPerformed
 
     private void changeNameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeNameMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_changeNameMenuItemActionPerformed
 
     private void changePassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePassMenuItemActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_changePassMenuItemActionPerformed
 
     private void kbCatCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbCatCBoxActionPerformed
         // get selected KBCat id
-        KBCat entryCat = (KBCat)DBHandler.getSingleObject("FROM KBCat WHERE "
+        KBCat entryCat = (KBCat) DBHandler.getSingleObject("FROM KBCat WHERE "
                 + "name='" + kbCatCBox.getSelectedItem().toString() + "'");
         // set selected KBCat id
         currentCat = entryCat.getCatID();
@@ -943,15 +958,15 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbCatCBoxActionPerformed
 
     private void kbContentsVersionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsVersionsButtonActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_kbContentsVersionsButtonActionPerformed
 
     private void kbContentsCategoriesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsCategoriesButtonActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_kbContentsCategoriesButtonActionPerformed
 
     private void kbContentsUsersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsUsersButtonActionPerformed
-        notImplemeted();
+        GUIAux.throwNotImplemetedMessage(instance);
     }//GEN-LAST:event_kbContentsUsersButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1021,6 +1036,24 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JMenu userMenu;
     // End of variables declaration//GEN-END:variables
 
+    // ************************** \\
+    // *     PUBLIC METHODS     * \\
+    // ************************** \\
+
+    /**
+     * Returns the only existing instance of MainWin. Singleton pattern
+     * implementation.
+     *
+     * @return working instance of MainWin GUI class.
+     */
+    public static MainWin getInstance() {
+        return instance;
+    }
+
+    // ************************** \\
+    // *    PRIVATE METHODS     * \\
+    // ************************** \\
+    
     private void finalizeComponents() {
         // maximize window
         this.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -1032,32 +1065,32 @@ public class MainWin extends javax.swing.JFrame {
         File url = new File("images/favicon.png");
         try {
             ImageIcon icon = new ImageIcon(ImageIO.read(url));
-            this.setIconImage(icon.getImage()); 
-        } catch (Exception e) { 
+            this.setIconImage(icon.getImage());
+        } catch (Exception e) {
             // TODO log error
         }
-        
+
         // listener for kb items list browsing
         // http://stackoverflow.com/a/5609251
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // get currently selected index entry
-                if (kbList.getSelectedIndex()<0) {
+                if (kbList.getSelectedIndex() < 0) {
                     kbList.setSelectedIndex(0);
                 }
                 String selectedItem = (String) kbList.getSelectedValue();
                 // load entry data from db
-                currentKBEntry = (KBEntry)DBHandler
-                        .getSingleObject("FROM KBEntry WHERE entryTitle='" 
+                currentKBEntry = (KBEntry) DBHandler
+                        .getSingleObject("FROM KBEntry WHERE entryTitle='"
                                 + selectedItem + "'");
                 // fill gui elements with data
                 kbContentsTitle.setText(currentKBEntry.getEntryTitle());
                 kbContentsTextArea.setText(currentKBEntry.getEntryBody());
                 // last editor (enrty author)
-                DBUser lastEditor = (DBUser)DBHandler.getSingleObject(
-                        "FROM DBUser WHERE id='" 
-                                + currentKBEntry.getEntryAuthor()+ "'");
+                DBUser lastEditor = (DBUser) DBHandler.getSingleObject(
+                        "FROM DBUser WHERE id='"
+                        + currentKBEntry.getEntryAuthor() + "'");
                 try {
                     kbContentsLastEdit.setText(lastEditor.getUserName());
                 } catch (Exception ex) {
@@ -1065,45 +1098,47 @@ public class MainWin extends javax.swing.JFrame {
                 }
                 // clear unsaved changes gui markers
                 markUnsavedChanges(false, false);
-             }
+            }
         };
-        kbList.addMouseListener(mouseListener); 
-        
+        kbList.addMouseListener(mouseListener);
+
         // listener for kb contents body changes
         // any change occured - unsaved marker appears
         // http://stackoverflow.com/a/7740510
         kbContentsTextArea.getDocument().addDocumentListener(
                 new DocumentListener() {
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    kbContentsUnsavedMarker.setVisible(true);
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        kbContentsUnsavedMarker.setVisible(true);
+                    }
+
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        kbContentsUnsavedMarker.setVisible(true);
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent arg0) {
+                        kbContentsUnsavedMarker.setVisible(true);
+                    }
                 }
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    kbContentsUnsavedMarker.setVisible(true);
-                }
-                @Override
-                public void changedUpdate(DocumentEvent arg0) {
-                    kbContentsUnsavedMarker.setVisible(true);
-                }
-            }
         );
-        
+
         // fill categories combo box
         // GET ENTRIES FROM DB AND TURN THEM INTO LIST 
         DefaultComboBoxModel listModel = new DefaultComboBoxModel();
         Iterator itr = DBHandler.getListOfObjects("FROM KBCat ORDER BY ord");
         while (itr.hasNext()) {
-            KBCat current = (KBCat)itr.next();
+            KBCat current = (KBCat) itr.next();
             listModel.addElement(current.getCatName());
         }
         // SET THIS LIST FOR INDEX OF ENTRIES
         kbCatCBox.setModel(listModel);
-        
+
         // refresh knowledge base list
         kbIndexRefreshButtonActionPerformed(null);
         // validate palette contents
-        paletteElementsPanel.setLayout(new BoxLayout(paletteElementsPanel, 
+        paletteElementsPanel.setLayout(new BoxLayout(paletteElementsPanel,
                 BoxLayout.Y_AXIS));
         paletteCategorySelectActionPerformed(null);
         // hide unsaved kb changes marker
@@ -1111,77 +1146,40 @@ public class MainWin extends javax.swing.JFrame {
         // initally hide all kb editing buttons
         showKBEditingTools(false);
     }
-    
-    private void notImplemeted() {
-        JOptionPane.showMessageDialog(instance, "Not implemented yet...", 
-                "VSEGraf", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void throwNotLoggedInMessage() {
-        JOptionPane.showMessageDialog(instance, "You are not logged in!", 
-                    "VSEGraf - editing", JOptionPane.INFORMATION_MESSAGE);
-    }
 
     private void loginAction() {
         // TODO log input
         JTextField userLogin = new JTextField("xseca00"); //TODO delete                                                  
-        JPasswordField userPass = new JPasswordField("heslo");                               
-        final JComponent[] inputs = new JComponent[] {
+        JPasswordField userPass = new JPasswordField("heslo");
+        final JComponent[] inputs = new JComponent[]{
             new JLabel("Login:"),
             userLogin,
             new JLabel("Password:"),
             userPass
         };
-        JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - login", 
+        JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - login",
                 JOptionPane.PLAIN_MESSAGE);
         // try to retrieve user under given xname from db
-//        // test values
-//        JTextField userLogin = new JTextField("xseca00");                                                  
-//        JTextField userPass = new JTextField("heslo"); 
-        Object obj = DBHandler.getSingleObject("FROM DBUser WHERE xname='" 
-                + userLogin.getText() + "'");
-        // test if user exists
-        if (obj instanceof DBUser) {
-            // get user data from db
-            DBUser user = (DBUser)obj;
-            // hash password input
-            // http://stackoverflow.com/a/6706816/3204544
-            String hPass = DigestUtils.sha1Hex(userPass.getText());
-            // compare
-            if (user.getUserPass().equals(hPass)) {
-                // process login
-                currentUser = user;
-                // show kb entry inputs and related menu options
-                showKBEditingTools(true);
-                allowLoginMenuOptions(true);
-                // display user name at status bar
-                currentUserLabel.setText(user.getUserName());
-                currentUserLabel.setForeground(Color.GREEN);
-                // TODO auto-update metadata
-                // inform user
-                JOptionPane.showMessageDialog(instance, "You are now logged in", 
+        if (currentLogin.login(userLogin.getText(), userPass.getText()) == 0) {
+            // show kb entry inputs and related menu options
+            showKBEditingTools(true);
+            allowLoginMenuOptions(true);
+            // display user name at status bar
+            currentUserLabel.setText(currentLogin.getUserName());
+            currentUserLabel.setForeground(Color.GREEN);
+            // TODO auto-update metadata
+            // inform user
+            JOptionPane.showMessageDialog(instance, "You are now logged in",
                     "VSEGraf - login", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(instance, 
-                     "Wrong login or password!", "VSEGraf - login", 
-                     JOptionPane.ERROR_MESSAGE);
-            }
         } else {
-            JOptionPane.showMessageDialog(instance, "Wrong login or password!", 
+            JOptionPane.showMessageDialog(instance, "Wrong login or password!",
                     "VSEGraf - login", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void allowLoginMenuOptions(boolean allow) {
-        loginMenuItem.setEnabled(!allow);
-        logoutMenuItem.setEnabled(allow);
-        changeNameMenuItem.setEnabled(allow);
-        changePassMenuItem.setEnabled(allow);
-    }
-
     private void logoutAction() {
         // process logout
-        currentUser = null;
+        currentLogin.logout();
         // hide kb entry inputs and related menu options
         showKBEditingTools(false);
         allowLoginMenuOptions(false);
@@ -1190,25 +1188,53 @@ public class MainWin extends javax.swing.JFrame {
         currentUserLabel.setForeground(Color.BLACK);
         // TODO autoupdate metadata
         // inform user
-        JOptionPane.showMessageDialog(instance, "You are now logged out", 
-            "VSEGraf - login", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(instance, "You are now logged out",
+                "VSEGraf - login", JOptionPane.INFORMATION_MESSAGE);
     }
-    
-    private class ClosingAdapter extends WindowAdapter {
-        @Override
-        public void windowClosing(WindowEvent we) { 
-            if (showQuestionDialog("Exit program?")==0) {
-                System.exit(0);
-            }
+
+    private void getListOfKBEntries() {
+        // GET ENTRIES FROM DB AND TURN THEM INTO LIST 
+        DefaultListModel listModel = new DefaultListModel();
+        Iterator itr = DBHandler.getListOfObjects("FROM KBEntry WHERE valid='1'"
+                + " AND cat='" + currentCat + "'");
+        while (itr.hasNext()) {
+            KBEntry current = (KBEntry) itr.next();
+            listModel.addElement(current.getEntryTitle());
         }
+        // SET THIS LIST FOR INDEX OF ENTRIES
+        kbList.setModel(listModel);
     }
     
-    private int showQuestionDialog(String question) {
-        String ObjButtons[] = {"Yes", "No"};
-        return JOptionPane.showOptionDialog(instance, question, "VSEGraf",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
-                    null, ObjButtons, ObjButtons[1]);
+    private void allowLoginMenuOptions(boolean allow) {
+        loginMenuItem.setEnabled(!allow);
+        logoutMenuItem.setEnabled(allow);
+        changeNameMenuItem.setEnabled(allow);
+        changePassMenuItem.setEnabled(allow);
     }
+
+    private void showKBEditingTools(boolean show) {
+        kbContentsEditButton.setVisible(show);
+        kbContentsEditTitleButton.setVisible(show);
+        kbContentsSaveButton.setVisible(show);
+        kbContentsNewButton.setVisible(show);
+        kbContentsDeleteButton.setVisible(show);
+        // get current user level
+        int level = currentLogin.getUserLevel();
+        // some options are only visible for mods
+        if (level >= ConfigConstants.USER_MOD) {
+            kbContentsVersionsButton.setVisible(show);
+        } else {
+            kbContentsVersionsButton.setVisible(false);
+        }
+        // some options are only visible for admins
+        if (level >= ConfigConstants.USER_ADMIN) {
+            kbContentsCategoriesButton.setVisible(show);
+            kbContentsUsersButton.setVisible(show);
+        } else {
+            kbContentsCategoriesButton.setVisible(false);
+            kbContentsUsersButton.setVisible(false);
+        }
+    } 
     
     private void allowKBEdit(boolean allow) {
         kbContentsSaveButton.setEnabled(allow);
@@ -1220,7 +1246,7 @@ public class MainWin extends javax.swing.JFrame {
             kbContentsEditButton.setText("Edit");
         }
     }
-    
+
     private void markUnsavedChanges(boolean unsTitle, boolean unsBody) {
         // unsaved title changes
         if (unsTitle) {
@@ -1232,30 +1258,19 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsUnsavedMarker.setVisible(unsBody);
     }
     
-    private void showKBEditingTools(boolean show) {
-        kbContentsEditButton.setVisible(show);
-        kbContentsEditTitleButton.setVisible(show);
-        kbContentsSaveButton.setVisible(show);
-        kbContentsNewButton.setVisible(show);
-        kbContentsDeleteButton.setVisible(show);
-        // get current user level
-        int level = 0;
-        if (currentUser!=null) {
-            level = currentUser.getUserLevel();
-        }
-        // some options are only visible for mods
-        if (level>=USER_MOD) {
-            kbContentsVersionsButton.setVisible(show);
-        } else {
-            kbContentsVersionsButton.setVisible(false);
-        }
-        // some options are only visible for admins
-        if (level>=USER_ADMIN) {
-            kbContentsCategoriesButton.setVisible(show);
-            kbContentsUsersButton.setVisible(show);
-        } else {
-            kbContentsCategoriesButton.setVisible(false);
-            kbContentsUsersButton.setVisible(false);
+    // ************************** \\
+    // *     INNER CLASSES      * \\
+    // ************************** \\
+
+    /**
+     * Class for displaying question prompt upon exiting program.
+     */
+    private class ClosingAdapter extends WindowAdapter {
+        @Override
+        public void windowClosing(WindowEvent we) {
+            if (GUIAux.showQuestionDialog(instance, "Exit program?") == 0) {
+                System.exit(0);
+            }
         }
     }
 }
