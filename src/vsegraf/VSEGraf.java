@@ -8,7 +8,7 @@ import java.awt.EventQueue;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-02-13 14:47 GMT
+ * @since 2015-03-07 11:51 GMT
  */
 public class VSEGraf {
 
@@ -17,13 +17,10 @@ public class VSEGraf {
      */
     public static void main(String[] args) {
         // open client gui window
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // show main window
-                MainWin gui = MainWin.getInstance();
-                gui.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            // show main window
+            MainWin gui = MainWin.getInstance();
+            gui.setVisible(true);
         });
     }
     

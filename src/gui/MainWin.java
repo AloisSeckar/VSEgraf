@@ -5,6 +5,7 @@ import db.DBStats;
 import db.KBEntry;
 import db.DBUser;
 import db.KBCat;
+import gui.dialogs.UserManagement;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
@@ -35,7 +36,7 @@ import logic.user.LoginHandler;
  *
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-07 10:57 GMT
+ * @since 2015-03-07 12:02 GMT
  */
 public class MainWin extends javax.swing.JFrame {
     
@@ -966,7 +967,8 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbContentsCategoriesButtonActionPerformed
 
     private void kbContentsUsersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsUsersButtonActionPerformed
-        GUIAux.throwNotImplemetedMessage(instance);
+        UserManagement uMan = new UserManagement(instance, true);
+        uMan.setVisible(true);
     }//GEN-LAST:event_kbContentsUsersButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1149,8 +1151,8 @@ public class MainWin extends javax.swing.JFrame {
 
     private void loginAction() {
         // TODO log input
-        JTextField userLogin = new JTextField("xseca00"); //TODO delete                                                  
-        JPasswordField userPass = new JPasswordField("heslo");
+        JTextField userLogin = new JTextField("root"); //TODO delete                                                  
+        JPasswordField userPass = new JPasswordField("toor");
         final JComponent[] inputs = new JComponent[]{
             new JLabel("Login:"),
             userLogin,

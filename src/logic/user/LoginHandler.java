@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-07 10:30 GMT
+ * @since 2015-03-07 11:50 GMT
  */
 public class LoginHandler {
 
@@ -36,7 +36,7 @@ public class LoginHandler {
     }
     
     public int getUserID() {
-        if (user==null) {
+        if (user!=null) {
             return user.getUserID();
         } else {
             return -1;
@@ -44,7 +44,7 @@ public class LoginHandler {
     }
     
     public String getUserName() {
-        if (user==null) {
+        if (user!=null) {
             return user.getUserName();
         } else {
             return "&nonymous";
@@ -52,7 +52,7 @@ public class LoginHandler {
     }
     
     public int getUserLevel() {
-        if (user==null) {
+        if (user!=null) {
             return user.getUserLevel();
         } else {
             return 0;
