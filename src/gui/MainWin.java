@@ -99,6 +99,9 @@ public class MainWin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         paletteCategorySelect = new javax.swing.JComboBox();
         paletteElementsPanel = new javax.swing.JPanel();
+        editorPalette1 = new gui.EditorPalette();
+        editorPalette2 = new gui.EditorPalette();
+        editorPalette3 = new gui.EditorPalette();
         metadataPanel = new javax.swing.JPanel();
         metadataLabel = new javax.swing.JLabel();
         metadataLabelName = new javax.swing.JLabel();
@@ -109,6 +112,7 @@ public class MainWin extends javax.swing.JFrame {
         canvasPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         canvasArea = new javax.swing.JPanel();
+        graphCanvas1 = new gui.GraphCanvas();
         kbPanel = new javax.swing.JPanel();
         kbCatLabel = new javax.swing.JLabel();
         kbContentsTitle = new javax.swing.JLabel();
@@ -161,6 +165,7 @@ public class MainWin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("VSEGraf");
+        getContentPane().setLayout(new java.awt.BorderLayout());
 
         sidePanel.setMaximumSize(null);
         sidePanel.setName(""); // NOI18N
@@ -170,7 +175,7 @@ public class MainWin extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Palette");
 
-        paletteCategorySelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Graph type 1", "Graph type 2", "Graph type 3" }));
+        paletteCategorySelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Class diagram", "Use case diagram", "State chart diagram" }));
         paletteCategorySelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 paletteCategorySelectActionPerformed(evt);
@@ -181,11 +186,19 @@ public class MainWin extends javax.swing.JFrame {
         paletteElementsPanel.setLayout(paletteElementsPanelLayout);
         paletteElementsPanelLayout.setHorizontalGroup(
             paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(editorPalette1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+            .addGroup(paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(editorPalette2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+            .addGroup(paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(editorPalette3, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
         );
         paletteElementsPanelLayout.setVerticalGroup(
             paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addComponent(editorPalette1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+            .addGroup(paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(editorPalette2, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+            .addGroup(paletteElementsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(editorPalette3, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout palettePanelLayout = new javax.swing.GroupLayout(palettePanel);
@@ -211,7 +224,7 @@ public class MainWin extends javax.swing.JFrame {
                 .addComponent(paletteCategorySelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(paletteElementsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         metadataPanel.setBackground(new java.awt.Color(153, 102, 255));
@@ -293,11 +306,11 @@ public class MainWin extends javax.swing.JFrame {
         canvasArea.setLayout(canvasAreaLayout);
         canvasAreaLayout.setHorizontalGroup(
             canvasAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 943, Short.MAX_VALUE)
+            .addComponent(graphCanvas1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
         );
         canvasAreaLayout.setVerticalGroup(
             canvasAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 398, Short.MAX_VALUE)
+            .addComponent(graphCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
         );
 
         jScrollPane1.setViewportView(canvasArea);
@@ -311,7 +324,7 @@ public class MainWin extends javax.swing.JFrame {
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
         );
 
         mainPanel.addTab("Graph Canvas", canvasPanel);
@@ -513,8 +526,8 @@ public class MainWin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(kbIndexLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
-                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                        .addComponent(kbIndexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                    .addComponent(kbContentsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kbContentsUnsavedMarker)
@@ -805,24 +818,30 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void paletteCategorySelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paletteCategorySelectActionPerformed
-        paletteElementsPanel.removeAll();
+ 
         switch (paletteCategorySelect.getSelectedIndex()) {
             case 1:
-                paletteElementsPanel.add(new JButton("Blue line"));
-                paletteElementsPanel.add(new JButton("Blue dot"));
-                paletteElementsPanel.add(new JButton("Blue rectangle"));
+                editorPalette1.setVisible(false);
+                editorPalette2.setVisible(true);
+                editorPalette3.setVisible(false);
+                
                 break;
             case 2:
-                paletteElementsPanel.add(new JButton("Red line"));
-                paletteElementsPanel.add(new JButton("Red dot"));
-                paletteElementsPanel.add(new JButton("Red rectangle"));
+                editorPalette1.setVisible(false);
+                editorPalette2.setVisible(false);
+                editorPalette3.setVisible(true);
                 break;
             default:
-                paletteElementsPanel.add(new JButton("Black line"));
+                /*paletteElementsPanel.add(new JButton("Black line"));
                 paletteElementsPanel.add(new JButton("Black dot"));
-                paletteElementsPanel.add(new JButton("Black rectangle"));
+                paletteElementsPanel.add(new JButton("Black rectangle"));*/
+                editorPalette1.setVisible(true);
+                editorPalette2.setVisible(false);
+                editorPalette3.setVisible(false);
         }
-        paletteElementsPanel.revalidate();
+        editorPalette1.revalidate();
+        editorPalette2.revalidate();
+        editorPalette3.revalidate();
     }//GEN-LAST:event_paletteCategorySelectActionPerformed
 
     private void kbContentsEditTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsEditTitleButtonActionPerformed
@@ -979,12 +998,16 @@ public class MainWin extends javax.swing.JFrame {
     private javax.swing.JMenuItem changePassMenuItem;
     private javax.swing.JLabel currentUserLabel;
     private javax.swing.JMenu editMenu;
+    private gui.EditorPalette editorPalette1;
+    private gui.EditorPalette editorPalette2;
+    private gui.EditorPalette editorPalette3;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem exportPDFMenuItem;
     private javax.swing.JMenuItem exportPNGMenuItem;
     private javax.swing.JMenuItem exportTXTMenuItem;
     private javax.swing.JMenuItem exportXMLMenuItem;
     private javax.swing.JMenu fileMenu;
+    private gui.GraphCanvas graphCanvas1;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1147,6 +1170,54 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsUnsavedMarker.setVisible(false);
         // initally hide all kb editing buttons
         showKBEditingTools(false);
+        
+        // set palettes buttons
+        editorPalette1
+				.addTemplate(
+						"Class",
+						new ImageIcon(
+								MainWin.class
+										.getResource("/graf/resources/rectangle.png")),
+						null, 100, 80, "");
+        
+        
+        editorPalette2
+                        .addTemplate(
+						"Actor",
+						new ImageIcon(
+								MainWin.class
+										.getResource("/graf/resources/actor.png")),
+						"shape=actor", 60, 80, "");
+        editorPalette2
+                        .addTemplate(
+						"Case",
+						new ImageIcon(
+								MainWin.class
+										.getResource("/graf/resources/ellipse.png")),
+						"ellipse", 100, 60, "");
+        editorPalette3
+				.addTemplate(
+						"Start point",
+						new ImageIcon(
+								MainWin.class
+										.getResource("/graf/resources/start.png")),
+						"roundImage;image=/graf/resources/start.png",
+						40, 40, "");
+        editorPalette3
+                        .addTemplate(
+						"State",
+						new ImageIcon(
+								MainWin.class
+										.getResource("/graf/resources/rounded.png")),
+						"rounded=1", 100, 60, "");
+        editorPalette3
+                        .addTemplate(
+						"End point",
+						new ImageIcon(
+								MainWin.class
+										.getResource("/graf/resources/terminate.png")),
+						"roundImage;image=/graf/resources/terminate.png",
+						40, 40, "");
     }
 
     private void loginAction() {
