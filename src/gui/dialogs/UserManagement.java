@@ -8,13 +8,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Iterator;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * GUI for KB users management for VSEGRAF project.
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-14 19:50 GMT
+ * @since 2015-03-14 20:47 GMT
  */
 public class UserManagement extends javax.swing.JDialog {
     
@@ -209,6 +211,8 @@ public class UserManagement extends javax.swing.JDialog {
         currentUser.setUserLevel((int)userDetailsLevelSpinner.getValue());
         // save in db
         DBHandler.updateObject(currentUser);
+        //
+        infoMessage("User details saved");
     }//GEN-LAST:event_saveUserButtonActionPerformed
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
@@ -218,9 +222,12 @@ public class UserManagement extends javax.swing.JDialog {
 
     private void newUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserButtonActionPerformed
         // create brand new user entry
-        // TODO pass gen
-        DBUser newUser = new DBUser(GUIAux.getStringDialog(
-                this, "Insert new user's login:"), "pass", 1, "New user");
+        // pass SHA1 hash see - http://stackoverflow.com/a/6706816/3204544
+        // TODO add "name must be unique" check
+        String name = GUIAux.getStringDialog(this, "Type in user's login:");
+        String pass = DigestUtils.sha1Hex(
+                GUIAux.getStringDialog(this, "Type in user's password:"));
+        DBUser newUser = new DBUser(name, pass, 1, "New user");
         // save in db
         DBHandler.saveObject(newUser);
         // change gui values
@@ -229,10 +236,20 @@ public class UserManagement extends javax.swing.JDialog {
         getUserList();
         // enable control buttons
         enableButtons(true);
+        //
+        infoMessage("New user created");
     }//GEN-LAST:event_newUserButtonActionPerformed
 
     private void resetPassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPassButtonActionPerformed
-        GUIAux.throwNotImplemetedMessage(this);
+        // get new password and hash it with SHA1
+        // http://stackoverflow.com/a/6706816/3204544
+        String pass = DigestUtils.sha1Hex(
+                GUIAux.getStringDialog(this, "Type in new password:"));
+        // set it and save it
+        currentUser.setUserPass(pass);
+        DBHandler.updateObject(currentUser);
+        //
+        infoMessage("Password successfully changed");
     }//GEN-LAST:event_resetPassButtonActionPerformed
 
     private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
@@ -246,6 +263,8 @@ public class UserManagement extends javax.swing.JDialog {
             getUserList();
             // disable control buttons
             enableButtons(false);
+            //
+            infoMessage("User deleted");
         }
     }//GEN-LAST:event_deleteUserButtonActionPerformed
 
@@ -356,5 +375,11 @@ public class UserManagement extends javax.swing.JDialog {
         saveUserButton.setEnabled(enabled);
         deleteUserButton.setEnabled(enabled);
         resetPassButton.setEnabled(enabled);
+    }
+    
+    private void infoMessage(String message) {
+        // display simple message for user
+        JOptionPane.showMessageDialog(this, message,
+                "VSEGraf - user management", JOptionPane.INFORMATION_MESSAGE);
     }
 }
