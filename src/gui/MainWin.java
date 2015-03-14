@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -36,7 +37,7 @@ import logic.user.LoginHandler;
  *
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-07 12:02 GMT
+ * @since 2015-03-07 19:38 GMT
  */
 public class MainWin extends javax.swing.JFrame {
     
@@ -165,7 +166,6 @@ public class MainWin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("VSEGraf");
-        getContentPane().setLayout(new java.awt.BorderLayout());
 
         sidePanel.setMaximumSize(null);
         sidePanel.setName(""); // NOI18N
@@ -181,6 +181,12 @@ public class MainWin extends javax.swing.JFrame {
                 paletteCategorySelectActionPerformed(evt);
             }
         });
+
+        editorPalette1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING));
+
+        editorPalette2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING));
+
+        editorPalette3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING));
 
         javax.swing.GroupLayout paletteElementsPanelLayout = new javax.swing.GroupLayout(paletteElementsPanel);
         paletteElementsPanel.setLayout(paletteElementsPanelLayout);
@@ -454,9 +460,6 @@ public class MainWin extends javax.swing.JFrame {
         });
 
         kbContentsUsersButton.setText("Users");
-        kbContentsUsersButton.setMaximumSize(new java.awt.Dimension(85, 23));
-        kbContentsUsersButton.setMinimumSize(new java.awt.Dimension(85, 23));
-        kbContentsUsersButton.setPreferredSize(new java.awt.Dimension(85, 23));
         kbContentsUsersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbContentsUsersButtonActionPerformed(evt);
@@ -497,7 +500,7 @@ public class MainWin extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsCategoriesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsUsersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(kbContentsUsersButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
                                 .addComponent(kbContentsUnsavedMarker))
                             .addGroup(kbPanelLayout.createSequentialGroup()
@@ -531,7 +534,7 @@ public class MainWin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kbContentsUnsavedMarker)
-                    .addComponent(kbContentsUsersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(kbContentsUsersButton)
                     .addComponent(kbContentsCategoriesButton)
                     .addComponent(kbIndexRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1233,7 +1236,7 @@ public class MainWin extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(instance, inputs, "VSEGraf - login",
                 JOptionPane.PLAIN_MESSAGE);
         // try to retrieve user under given xname from db
-        if (currentLogin.login(userLogin.getText(), userPass.getText()) == 0) {
+        if (currentLogin.login(userLogin.getText(), new String(userPass.getPassword())) == 0) {
             // show kb entry inputs and related menu options
             showKBEditingTools(true);
             allowLoginMenuOptions(true);

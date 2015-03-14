@@ -1,14 +1,17 @@
 package gui;
 
 import java.awt.Component;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  * Generic methods for GUI handling for VSEGRAF project.
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-07 10:55 GMT
+ * @since 2015-03-14 19:14 GMT
  */
 public class GUIAux {
 
@@ -48,7 +51,28 @@ public class GUIAux {
     }
     
     /**
-     * Generic "feature not implemented" message.
+     * Generic single string-retrieving dialog.
+     * 
+     * @param parent parent GUI component
+     * @param message displayed text
+     * 
+     * @return user input - String
+     */
+    public static String getStringDialog(Component parent, String message) {
+        // TODO log input
+        JTextField userInput = new JTextField();
+        final JComponent[] inputs = new JComponent[]{
+            new JLabel(message),
+            userInput
+        };
+        JOptionPane.showMessageDialog(parent, inputs, "VSEGraf - login",
+                JOptionPane.PLAIN_MESSAGE);
+        //
+        return userInput.getText();
+    }
+    
+    /**
+     * Generic "not implemented yet" message.
      * 
      * @param parent parent GUI component
      */

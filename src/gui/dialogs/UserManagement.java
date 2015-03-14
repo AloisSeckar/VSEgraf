@@ -14,7 +14,7 @@ import javax.swing.DefaultListModel;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-07 12:02 GMT
+ * @since 2015-03-14 19:50 GMT
  */
 public class UserManagement extends javax.swing.JDialog {
     
@@ -49,7 +49,6 @@ public class UserManagement extends javax.swing.JDialog {
         userList = new javax.swing.JList();
         userDetailsLabel = new javax.swing.JLabel();
         userDetailsLogin = new javax.swing.JLabel();
-        userDetailsLoginText = new javax.swing.JTextField();
         userDetailsName = new javax.swing.JLabel();
         userDetailsNameText = new javax.swing.JTextField();
         userDetailsLevel = new javax.swing.JLabel();
@@ -58,6 +57,8 @@ public class UserManagement extends javax.swing.JDialog {
         resetPassButton = new javax.swing.JButton();
         newUserButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
+        userDetailsLoginText = new javax.swing.JLabel();
+        deleteUserButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -80,8 +81,6 @@ public class UserManagement extends javax.swing.JDialog {
         userDetailsLogin.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         userDetailsLogin.setText("Login:");
 
-        userDetailsLoginText.setEnabled(false);
-
         userDetailsName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         userDetailsName.setText("Name:");
 
@@ -98,7 +97,6 @@ public class UserManagement extends javax.swing.JDialog {
         });
 
         resetPassButton.setText("Reset password");
-        resetPassButton.setEnabled(false);
         resetPassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetPassButtonActionPerformed(evt);
@@ -119,6 +117,16 @@ public class UserManagement extends javax.swing.JDialog {
             }
         });
 
+        userDetailsLoginText.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        userDetailsLoginText.setText("Login");
+
+        deleteUserButton.setText("Delete");
+        deleteUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -129,35 +137,34 @@ public class UserManagement extends javax.swing.JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                     .addComponent(userListLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userDetailsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(userDetailsLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(userDetailsLevelSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(userDetailsName, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(userDetailsLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(userDetailsLoginText, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(userDetailsNameText)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(userDetailsLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(userDetailsLoginText, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(resetPassButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(2, 2, 2))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(userDetailsLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(saveUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(userDetailsLevelSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(userDetailsName, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(userDetailsNameText, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(newUserButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(saveUserButton)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(resetPassButton)
-                            .addComponent(closeButton))
-                        .addGap(4, 4, 4)))
-                .addContainerGap())
+                                .addComponent(newUserButton)
+                                .addGap(1, 1, 1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(closeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(deleteUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(userDetailsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,11 +174,11 @@ public class UserManagement extends javax.swing.JDialog {
                     .addComponent(userListLabel)
                     .addComponent(userDetailsLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(userDetailsLogin)
-                            .addComponent(userDetailsLoginText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(userDetailsLoginText))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(userDetailsName)
@@ -182,22 +189,26 @@ public class UserManagement extends javax.swing.JDialog {
                             .addComponent(userDetailsLevelSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(resetPassButton)
-                            .addComponent(saveUserButton))
+                            .addComponent(saveUserButton)
+                            .addComponent(newUserButton)
+                            .addComponent(deleteUserButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(newUserButton)
-                            .addComponent(closeButton))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                            .addComponent(closeButton)
+                            .addComponent(resetPassButton)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
  
     private void saveUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveUserButtonActionPerformed
-        GUIAux.throwNotImplemetedMessage(this);
+        // save current user in db with current values
+        currentUser.setUserName(userDetailsNameText.getText());
+        currentUser.setUserLevel((int)userDetailsLevelSpinner.getValue());
+        // save in db
+        DBHandler.updateObject(currentUser);
     }//GEN-LAST:event_saveUserButtonActionPerformed
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
@@ -206,12 +217,37 @@ public class UserManagement extends javax.swing.JDialog {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void newUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserButtonActionPerformed
-        GUIAux.throwNotImplemetedMessage(this);
+        // create brand new user entry
+        // TODO pass gen
+        DBUser newUser = new DBUser(GUIAux.getStringDialog(
+                this, "Insert new user's login:"), "pass", 1, "New user");
+        // save in db
+        DBHandler.saveObject(newUser);
+        // change gui values
+        loadUserDetails(newUser); // TODO check if working...
+        // reload user list
+        getUserList();
+        // enable control buttons
+        enableButtons(true);
     }//GEN-LAST:event_newUserButtonActionPerformed
 
     private void resetPassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPassButtonActionPerformed
         GUIAux.throwNotImplemetedMessage(this);
     }//GEN-LAST:event_resetPassButtonActionPerformed
+
+    private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
+        if (GUIAux.showQuestionDialog(this, 
+                    "Do you really want to delete displayed user?") == 0) {
+            // delete currenly loaded user
+            DBHandler.deleteObject(currentUser);
+            // change gui values using mock object
+            loadUserDetails(new DBUser("-", "", 1, "Deleted"));
+            // reload user list
+            getUserList();
+            // disable control buttons
+            enableButtons(false);
+        }
+    }//GEN-LAST:event_deleteUserButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,6 +287,7 @@ public class UserManagement extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
+    private javax.swing.JButton deleteUserButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton newUserButton;
     private javax.swing.JButton resetPassButton;
@@ -259,7 +296,7 @@ public class UserManagement extends javax.swing.JDialog {
     private javax.swing.JLabel userDetailsLevel;
     private javax.swing.JSpinner userDetailsLevelSpinner;
     private javax.swing.JLabel userDetailsLogin;
-    private javax.swing.JTextField userDetailsLoginText;
+    private javax.swing.JLabel userDetailsLoginText;
     private javax.swing.JLabel userDetailsName;
     private javax.swing.JTextField userDetailsNameText;
     private javax.swing.JList userList;
@@ -293,10 +330,31 @@ public class UserManagement extends javax.swing.JDialog {
                 currentUser = (DBUser) DBHandler.getSingleObject(
                         "FROM DBUser WHERE xname='" + selectedItem + "'");
                 // fill gui elements with data
-                userDetailsLoginText.setText(currentUser.getUserLogin());
-                userDetailsNameText.setText(currentUser.getUserName());
-                userDetailsLevelSpinner.setValue(currentUser.getUserLevel());
+                loadUserDetails(currentUser);
+                // enable control buttons
+                enableButtons(true);
             }
         };
-        userList.addMouseListener(mouseListener);}
+        userList.addMouseListener(mouseListener);
+        
+        // set window title
+        this.setTitle("VSEgraf - User management");
+    }
+
+    private void loadUserDetails(DBUser user) {
+        // fill GUI with given user details
+        userDetailsLoginText.setText(user.getUserLogin());
+        userDetailsNameText.setText(user.getUserName());
+        userDetailsLevelSpinner.setValue(user.getUserLevel());
+    }
+
+    private void enableButtons(boolean enabled) {
+        // TODO scrap this using simulated mouse click on user list - but HOW???
+        // disable or enable control buttons
+        // buttons has to be disabled after user is deleted
+        // and enabled whenever the control actions should be 
+        saveUserButton.setEnabled(enabled);
+        deleteUserButton.setEnabled(enabled);
+        resetPassButton.setEnabled(enabled);
+    }
 }

@@ -84,7 +84,14 @@ public class GraphCanvas extends JPanel{
 		 * Overrides drop behaviour to set the cell style if the target
 		 * is not a valid drop target and the cells are of the same
 		 * type (eg. both vertices or both edges). 
+         * @param cells
+         * @param dx
+         * @param dy
+         * @param target
+         * @param location
+         * @return 
 		 */
+                @Override
 		public Object[] importCells(Object[] cells, double dx, double dy,
 				Object target, Point location)
 		{
