@@ -6,6 +6,7 @@ import db.KBEntry;
 import db.DBUser;
 import db.KBCat;
 import gui.dialogs.UserManagement;
+import gui.dialogs.VersionManagement;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
@@ -14,14 +15,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import logic.ConfigConstants;
+import logic.LogicAux;
 import logic.user.LoginHandler;
 
 /**
@@ -37,7 +37,7 @@ import logic.user.LoginHandler;
  *
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-07 19:38 GMT
+ * @since 2015-04-12 11:10 GMT+1
  */
 public class MainWin extends javax.swing.JFrame {
     
@@ -358,9 +358,6 @@ public class MainWin extends javax.swing.JFrame {
         kbContentsLastEditLabel.setText("Last edit:");
 
         kbCatCBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        kbCatCBox.setMaximumSize(new java.awt.Dimension(80, 23));
-        kbCatCBox.setMinimumSize(new java.awt.Dimension(80, 23));
-        kbCatCBox.setPreferredSize(new java.awt.Dimension(80, 23));
         kbCatCBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbCatCBoxActionPerformed(evt);
@@ -460,6 +457,9 @@ public class MainWin extends javax.swing.JFrame {
         });
 
         kbContentsUsersButton.setText("Users");
+        kbContentsUsersButton.setMaximumSize(new java.awt.Dimension(85, 23));
+        kbContentsUsersButton.setMinimumSize(new java.awt.Dimension(85, 23));
+        kbContentsUsersButton.setPreferredSize(new java.awt.Dimension(85, 23));
         kbContentsUsersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kbContentsUsersButtonActionPerformed(evt);
@@ -500,7 +500,7 @@ public class MainWin extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(kbContentsCategoriesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kbContentsUsersButton)
+                                .addComponent(kbContentsUsersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
                                 .addComponent(kbContentsUnsavedMarker))
                             .addGroup(kbPanelLayout.createSequentialGroup()
@@ -534,7 +534,7 @@ public class MainWin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(kbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kbContentsUnsavedMarker)
-                    .addComponent(kbContentsUsersButton)
+                    .addComponent(kbContentsUsersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kbContentsCategoriesButton)
                     .addComponent(kbIndexRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kbContentsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -750,10 +750,11 @@ public class MainWin extends javax.swing.JFrame {
             // set new entry and save it into db
             KBEntry newEntry = new KBEntry(currentKBEntry.getKbOrigID(),
                     kbContentsTitle.getText(), currentKBEntry.getEntryCat(),
-                    kbContentsTextArea.getText(), currentLogin.getUserID(), 1);
+                    kbContentsTextArea.getText(), currentLogin.getUserID(), 
+                    LogicAux.getNow(), 1);
             DBHandler.saveObject(newEntry);
             // make currently edited entry version invalid
-            currentKBEntry.setEntryValid(0);
+            currentKBEntry.setEntryStatus(0);
             DBHandler.updateObject(currentKBEntry);
             // HANDLE GUI CHANGES
             // update items list as entry title might have changed
@@ -892,7 +893,8 @@ public class MainWin extends javax.swing.JFrame {
             DBHandler.updateObject(origEntries); // save new value for future
             // create plain new entry and save it to db
             currentKBEntry = new KBEntry(newID, "New entry", currentCat,
-                    "Start typing contents...", currentLogin.getUserID(), 1);
+                    "Start typing contents...", currentLogin.getUserID(), 
+                    LogicAux.getNow(), 1);
             DBHandler.saveObject(currentKBEntry);
             // update gui elements with new values
             kbContentsTitle.setText(currentKBEntry.getEntryTitle());
@@ -981,7 +983,21 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbCatCBoxActionPerformed
 
     private void kbContentsVersionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsVersionsButtonActionPerformed
-        GUIAux.throwNotImplemetedMessage(instance);
+        if (currentLogin.getUserLevel()>=ConfigConstants.USER_MOD) {
+            // must be mod to be allowed to do this
+            // TODO allow regular users to see older versions 
+            // and a possibility to report them
+            if (currentKBEntry!=null) {
+                VersionManagement vMan = new VersionManagement(
+                        instance, true, currentKBEntry.getKbOrigID());
+                vMan.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(instance, "Please select KB entry first!",
+                    "VSEGraf - admin", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            GUIAux.throwNoPermissionMessage(instance);
+        }
     }//GEN-LAST:event_kbContentsVersionsButtonActionPerformed
 
     private void kbContentsCategoriesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsCategoriesButtonActionPerformed
@@ -989,8 +1005,13 @@ public class MainWin extends javax.swing.JFrame {
     }//GEN-LAST:event_kbContentsCategoriesButtonActionPerformed
 
     private void kbContentsUsersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kbContentsUsersButtonActionPerformed
-        UserManagement uMan = new UserManagement(instance, true);
-        uMan.setVisible(true);
+        if (currentLogin.getUserLevel()>=ConfigConstants.USER_ADMIN) {
+            // must be admin to be allowed to do this
+            UserManagement uMan = new UserManagement(instance, true);
+            uMan.setVisible(true);
+        } else {
+            GUIAux.throwNoPermissionMessage(instance);
+        }
     }//GEN-LAST:event_kbContentsUsersButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1271,8 +1292,8 @@ public class MainWin extends javax.swing.JFrame {
     private void getListOfKBEntries() {
         // GET ENTRIES FROM DB AND TURN THEM INTO LIST 
         DefaultListModel listModel = new DefaultListModel();
-        Iterator itr = DBHandler.getListOfObjects("FROM KBEntry WHERE valid='1'"
-                + " AND cat='" + currentCat + "'");
+        Iterator itr = DBHandler.getListOfObjects("FROM KBEntry WHERE "
+                + "status='1' AND cat='" + currentCat + "'");
         while (itr.hasNext()) {
             KBEntry current = (KBEntry) itr.next();
             listModel.addElement(current.getEntryTitle());

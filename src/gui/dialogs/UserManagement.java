@@ -16,7 +16,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-03-14 20:47 GMT
+ * @since 2015-04-02 22:43 GMT+1
  */
 public class UserManagement extends javax.swing.JDialog {
     
@@ -231,7 +231,9 @@ public class UserManagement extends javax.swing.JDialog {
         // save in db
         DBHandler.saveObject(newUser);
         // change gui values
-        loadUserDetails(newUser); // TODO check if working...
+        // TODO get rid of "newUser" - use "currentUser" instead
+        // TODO check if working... (???)
+        loadUserDetails(newUser); 
         // reload user list
         getUserList();
         // enable control buttons
@@ -267,42 +269,6 @@ public class UserManagement extends javax.swing.JDialog {
             infoMessage("User deleted");
         }
     }//GEN-LAST:event_deleteUserButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UserManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            UserManagement dialog = new UserManagement(new javax.swing.JFrame(), true);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;

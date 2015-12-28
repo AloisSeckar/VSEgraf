@@ -5,7 +5,7 @@
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-02-13 15:58 GMT
+ * @since 2015-04-02 23:12 GMT+1
 -->
 <hibernate-mapping package="db">
   <class name="KBEntry">
@@ -13,10 +13,11 @@
       <generator class="native"/>
     </id>
     <property column="orig_id" name="kbOrigID" type="int"/>
-    <property column="title" name="entryTitle" type="string" length="50" />
+    <property column="title" name="entryTitle" type="string" length="50"/>
     <property column="cat" name="entryCat" type="int"/>
     <property column="body" name="entryBody" type="text"/>
     <property column="author" name="entryAuthor" type="int"/>
-    <property column="valid" name="entryValid" type="int"/>
+    <property column="created" name="entryCreated" type="string" length="20"/>
+    <property column="status" name="entryStatus" type="int"/>
   </class>
 </hibernate-mapping>

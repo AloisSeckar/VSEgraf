@@ -5,7 +5,7 @@ package db;
  * 
  * @author Alois Seckar [ ellrohir@seznam.cz ]
  * @version 0.1
- * @since 2015-02-13 14:48 GMT
+ * @since 2015-04-02 22:56 GMT+1
  */
 public class KBEntry {
 
@@ -53,10 +53,17 @@ public class KBEntry {
     private int entryAuthor;
     
     /**
-     * Validity indicator.
-     * 1 - current version of entrz.
+     * Entry creation time.
      */
-    private int entryValid;
+    private String entryCreated;
+    
+    /**
+     * Entry status indicator.
+     * 1 - current version of entry.
+     * 0 - obsolote version.
+     * -1 - deleted by moderator.
+     */
+    private int entryStatus;
             
             
 
@@ -72,13 +79,14 @@ public class KBEntry {
     // standard constructor
     
     public KBEntry(int origID, String eTitle, int eCat, String eBody, 
-            int eAuthor, int eValid) {
+            int eAuthor, String eCreated, int eValid) {
         this.kbOrigID = origID;
         this.entryTitle = eTitle;
         this.entryCat = eCat;
         this.entryBody = eBody;
         this.entryAuthor = eAuthor;
-        this.entryValid = eValid;
+        this.entryCreated = eCreated;
+        this.entryStatus = eValid;
     }
 
     // ************************** \\
@@ -135,12 +143,20 @@ public class KBEntry {
         this.entryAuthor = entryAuthor;
     }
 
-    public int getEntryValid() {
-        return entryValid;
+    public String getEntryCreated() {
+        return entryCreated;
     }
 
-    public void setEntryValid(int entryValid) {
-        this.entryValid = entryValid;
+    public void setEntryCreated(String entryCreated) {
+        this.entryCreated = entryCreated;
+    }
+
+    public int getEntryStatus() {
+        return entryStatus;
+    }
+
+    public void setEntryStatus(int entryStatus) {
+        this.entryStatus = entryStatus;
     }
     
     // ************************** \\
@@ -154,7 +170,7 @@ public class KBEntry {
         final int prime = 2108; // coded at "21:08"
         int result = 1;
         result = prime * result + Integer.valueOf(kbID).hashCode();
-        result = prime * result + Integer.valueOf(entryTitle).hashCode();
+        result = prime * result + Integer.valueOf(entryCreated).hashCode();
         return result;
     }
 
